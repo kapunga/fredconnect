@@ -1,7 +1,5 @@
 package org.kapunga.fredconnect
 
-import play.api.libs.json.JsValue
-
 class AskFredClient(apiKey: String) {
   private val apiClient = new FredApiClient(apiKey)
 
@@ -12,9 +10,14 @@ class AskFredClient(apiKey: String) {
     }
   }
 
+  def getFencersByLastName(lastName: String): List[Fencer] = {
+    apiClient.listQuery(FredQuery.fencer, Map("last_name" -> lastName)).map(FredDataParsers.parseFencer).toList
+  }
+
   def getFencersFromClub(clubId: Int): List[Fencer] = {
     apiClient.listQuery(FredQuery.fencer, Map("club_id" -> clubId.toString)).map(FredDataParsers.parseFencer).toList
   }
+
 }
 
 

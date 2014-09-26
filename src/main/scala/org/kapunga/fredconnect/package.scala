@@ -33,7 +33,7 @@ package object fredconnect {
   object FredQuery extends Enumeration {
     val tournament = QueryType("tournament", "tournaments")
     val event = QueryType("event", "events")
-    val roundresult = QueryType("roundresult", "roundresults")
+    val roundresult = QueryType("roundresult", "rounds")
     val fencer = QueryType("fencer", "fencers")
     val result = QueryType("result", "results")
 
