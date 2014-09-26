@@ -1,0 +1,10 @@
+#Intellij
+.idea
+.idea_modules
+
+#SBT
+project/boot/
+project/plugins/project/
+
+#Scala
+target
