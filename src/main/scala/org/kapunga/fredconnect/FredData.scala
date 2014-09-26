@@ -65,3 +65,46 @@ case class Rating(id: Int, weapon: Weapon, letter: RatingLetter, year: String, a
 case class Fencer(id: Int, authIds: AuthorityId, firstName: String, lastName: String, gender: Gender, birthYear: Int,
                   division: Division, clubs: List[Club], ratings: Map[Weapon, Rating]) extends FredData
 
+case class Result(id: Int, eventId: Int, tournamentId: Int)
+
+/*
+  "event_id" : 104519,
+  "tournament_id" : 26218,
+  "competitor_id" : 43595,
+  "first_name" : "Paul",
+  "last_name" : "Thordarson",
+  "tournament_name" : "2014 Massachusetts Bay State Games",
+  "tournament_start_date" : "2014-07-11",
+  "tournament_end_date" : "2014-07-13",
+  "venue_name" : "Prise De Fer Fencing Club",
+  "venue_address" : "71 Faulkner St",
+  "venue_city" : "Billerica",
+  "venue_state" : "MA",
+  "venue_zip" : "01862",
+  "venue_country" : "USA",
+  "venue_latitude" : 42.592204,
+  "venue_longitude" : -71.284101,
+  "venue_geo_precision" : "street",
+  "weapon" : "Epee",
+  "gender" : "Men",
+  "age_limit" : "Senior",
+  "rating_limit" : "Open",
+  "event_rating" : "B2",
+  "entries" : 35,
+  "is_team" : false,
+  "event_desc" : "",
+  "event_date" : "2014-07-13",
+  "event_time" : "13:30:00",
+  "authority" : "USFA",
+  "place" : 23,
+  "tournament_division_id" : 42,
+  "competitor_division_id" : 42,
+  "club_id_1" : 6859,
+  "club_1_name" : "Olympia Fencing Center",
+  "club_1_initials" : "OLYMPIAFC",
+  "rating_before_letter" : "D",
+  "rating_before_year" : 2014,
+  "is_excluded" : false,
+  "is_withdraw" : false
+ */
+
