@@ -15,7 +15,7 @@ object FredDataParsers {
 
     val gender = parseGender(jsValue \ "gender")
 
-    val birthYear = parseInt(jsValue \ "birth_year", 1970)
+    val birthYear = parseInt(jsValue \ "birthyear", 1970)
 
     val authIds = parseAuthorityId(jsValue)
 
