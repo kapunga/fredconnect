@@ -1,6 +1,7 @@
 package org.kapunga.fredconnect
 
-import org.kapunga.fredconnect.FredDataParsers._
+import org.kapunga.fredconnect.parsers.FredDataParsers
+import FredDataParsers._
 import org.kapunga.fredconnect.FredQuery._
 
 /**
@@ -22,7 +23,7 @@ class AskFredClient(apiKey: String) {
    * @param id An askFred internal id.
    * @return An Option containing a Fencer if one was found, None if one wasn't found.
    */
-  def getFencerById(id: Int): Option[Fencer] = {
+  def getFencer(id: Int): Option[Fencer] = {
     apiClient.idQuery(fencer, id) match {
       case Some(jsResult) => Some(parseFencer(jsResult))
       case None => None
@@ -75,6 +76,21 @@ class AskFredClient(apiKey: String) {
    */
   def getFencersFromClub(clubId: Int): List[Fencer] = {
     apiClient.listQuery(fencer, Map("club_id" -> s"${clubId}")).map(parseFencer).toList
+  }
+
+  /**
+   * Queries askFred for a tournament by askFred's internal id.
+   *
+   * @see org.kapunga.fredconnect.Tournament
+   *
+   * @param id An askFred internal id.
+   * @return An Option containing a Fencer if one was found, None if one wasn't found.
+   */
+  def getTournament(id: Int): Option[Tournament] = {
+    apiClient.idQuery(tournament, id) match {
+      case Some(jsResult) => Some(parseTournament(jsResult))
+      case None => None
+    }
   }
 }
 

@@ -23,11 +23,29 @@ package object fredconnect {
     val U = Value("U")
   }
 
+  object RatingLimit extends Enumeration {
+    type RatingLimit = Value
+
+    val Open, Unrated, Eunder, Div3, Div2, Div1a, Dabove, Div1, Babove, Aonly = Value
+  }
+
+  object AgeLimit extends Enumeration {
+    type AgeLimit = Value
+
+    val None, Y8, Y10, Y12, Y14, U16, U19, Vet40, Vet50, Vet60, Vet70, VetCombined = Value
+  }
+
   object Gender extends Enumeration {
     type Gender = Value
 
     val Male = Value("M")
     val Female = Value("F")
+  }
+
+  object EventGender extends Enumeration {
+    type EventGender = Value
+
+    val Men, Women, Mixed = Value
   }
 
   object FredQuery extends Enumeration {
