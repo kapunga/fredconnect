@@ -17,20 +17,13 @@ package object fredconnect {
   object Weapon extends Enumeration {
     type Weapon = Value
 
-    val Foil = Value("Foil")
-    val Epee = Value("Epee")
-    val Saber = Value("Saber")
+    val Foil, Epee, Saber = Value
   }
 
   object RatingLetter extends Enumeration {
     type RatingLetter = Value
 
-    val A = Value("A")
-    val B = Value("B")
-    val C = Value("C")
-    val D = Value("D")
-    val E = Value("E")
-    val U = Value("U")
+    val A, B, C, D, E, U = Value
   }
 
   object RatingLimit extends Enumeration {
@@ -48,8 +41,7 @@ package object fredconnect {
   object Gender extends Enumeration {
     type Gender = Value
 
-    val Male = Value("M")
-    val Female = Value("F")
+    val Male, Female = Value
   }
 
   object EventGender extends Enumeration {

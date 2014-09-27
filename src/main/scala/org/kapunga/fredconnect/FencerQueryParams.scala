@@ -87,8 +87,3 @@ class FencerQueryParams extends QueryParams {
       throw new IllegalArgumentException(s"Year must be 4 digits, ${year} is an invalid birth year.")
   }
 }
-
-/*
-2	user_id	integer
-4	user_ids	comma separated list of integers	2,6,34,3,75	maximum 100 ids
- */
