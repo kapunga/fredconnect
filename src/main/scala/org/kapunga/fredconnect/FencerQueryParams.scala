@@ -3,19 +3,34 @@ package org.kapunga.fredconnect
 import org.kapunga.fredconnect.Gender.Gender
 
 /**
+ * This class is essentially a Builder for a map of params to be used in an arbitrary query for a list
+ * of Fencers.  The 'set' methods are used to set certain search parameters and then "getQueryMap" is
+ * used to get the map.  There is, however an implicit conversion of the superclass to extract the
+ * parameter map, so you can just pass an instance instead of a map to the AskFred client.
  *
  * There are currently two parameters askFred takes for fencers which we do not support:
  *
- * user_id	integer
- * user_ids	comma separated list of integers
+ * user_id - integer
+ * user_ids - comma separated list of integers
  *
  * This appears to be an internal fred userId which is at the moment irrelevant.
+ *
+ * @see [[org.kapunga.fredconnect.queryParamsToMap()]]
+ * @see [[org.kapunga.fredconnect.AskFredClient.getFencers()]]
+ *
+ * @author Paul J Thordarson
  */
 class FencerQueryParams extends QueryParams {
   private var parameterMap: Map[String, String] = Map()
 
+  @Override
   def getQueryMap(): Map[String, String] = parameterMap
 
+  /**
+   *
+   * @param ids A list of fencer ids to look up.
+   * @throws IllegalArgumentException If ids is longer than the maximum allowed number, @see QueryParams#MAX_IDS
+   */
   def setFencerIds(ids: List[Int]): Unit = {
     if (ids.length > MAX_IDS)
       throw new IllegalArgumentException(s"${ids.length} is greater than the maximum ids of ${MAX_IDS}.")
@@ -23,8 +38,17 @@ class FencerQueryParams extends QueryParams {
     parameterMap = parameterMap + ("fencer_ids" -> ids.mkString(","))
   }
 
+  /**
+   *
+   * @param id
+   */
   def setUsfaId(id: String): Unit = parameterMap = parameterMap + ("usfa_id" -> id)
 
+  /**
+   *
+   * @param name
+   * @param exact
+   */
   def setFirstName(name: String, exact: Boolean = true): Unit = {
     parameterMap = exact match {
       case true => parameterMap + ("first_name" -> name)
@@ -32,6 +56,11 @@ class FencerQueryParams extends QueryParams {
     }
   }
 
+  /**
+   *
+   * @param name
+   * @param exact
+   */
   def setLastName(name: String, exact: Boolean = true): Unit = {
     parameterMap = exact match {
       case true => parameterMap + ("last_name" -> name)
@@ -39,6 +68,10 @@ class FencerQueryParams extends QueryParams {
     }
   }
 
+  /**
+   *
+   * @param gender
+   */
   def setGender(gender: Gender): Unit = {
     parameterMap = gender match {
       case Gender.Female => parameterMap + ("gender" -> "F")
@@ -46,8 +79,16 @@ class FencerQueryParams extends QueryParams {
     }
   }
 
+  /**
+   *
+   * @param id
+   */
   def setClub(id: Int): Unit = parameterMap = parameterMap + ("club_id" -> id.toString)
 
+  /**
+   *
+   * @param ids
+   */
   def setClubs(ids: List[Int]): Unit = {
     if (ids.length > MAX_IDS)
       throw new IllegalArgumentException(s"${ids.length} is greater than the maximum ids of ${MAX_IDS}.")
@@ -55,8 +96,16 @@ class FencerQueryParams extends QueryParams {
     parameterMap = parameterMap + ("club_ids" -> ids.mkString(","))
   }
 
+  /**
+   *
+   * @param id
+   */
   def setDivision(id: Int): Unit = parameterMap = parameterMap + ("division_id" -> id.toString)
 
+  /**
+   *
+   * @param ids
+   */
   def setDivisions(ids: List[Int]): Unit = {
     if (ids.length > MAX_IDS)
       throw new IllegalArgumentException(s"${ids.length} is greater than the maximum ids of ${MAX_IDS}.")
@@ -64,18 +113,30 @@ class FencerQueryParams extends QueryParams {
     parameterMap = parameterMap + ("division_ids" -> ids.mkString(","))
   }
 
+  /**
+   *
+   * @param year
+   */
   def setBirthYearExact(year: Int): Unit = {
     validateBirthYear(year)
 
     parameterMap = parameterMap + ("birthyear" -> year.toString)
   }
 
+  /**
+   *
+   * @param year
+   */
   def setBirthYearBefore(year: Int): Unit = {
     validateBirthYear(year)
 
     parameterMap = parameterMap + ("birthyear_lte" -> year.toString)
   }
 
+  /**
+   *
+   * @param year
+   */
   def setBirthYearAfter(year: Int): Unit = {
     validateBirthYear(year)
 

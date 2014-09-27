@@ -8,6 +8,7 @@ import org.kapunga.fredconnect.FredQuery._
  * Builds a new instance of an askFred client with a given API key.  If you don't have an API key, you
  * can find information about it here: https://sites.google.com/a/countersix.com/fred-rest-api/
  *
+ * @constructor Create a new instance of AskFredClient with a given API key.
  * @param apiKey The API key to use to access askFred.
  *
  * @author Paul J Thordarson
