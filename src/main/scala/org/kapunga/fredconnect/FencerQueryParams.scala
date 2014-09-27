@@ -1,6 +1,7 @@
 package org.kapunga.fredconnect
 
 import org.kapunga.fredconnect.Gender.Gender
+import org.kapunga.fredconnect.QueryEval.QueryEval
 
 /**
  * This class is essentially a Builder for a map of params to be used in an arbitrary query for a list
@@ -116,35 +117,16 @@ class FencerQueryParams extends QueryParams {
   /**
    *
    * @param year
+   * @param queryEval
    */
-  def setBirthYearExact(year: Int): Unit = {
-    validateBirthYear(year)
-
-    parameterMap = parameterMap + ("birthyear" -> year.toString)
-  }
-
-  /**
-   *
-   * @param year
-   */
-  def setBirthYearBefore(year: Int): Unit = {
-    validateBirthYear(year)
-
-    parameterMap = parameterMap + ("birthyear_lte" -> year.toString)
-  }
-
-  /**
-   *
-   * @param year
-   */
-  def setBirthYearAfter(year: Int): Unit = {
-    validateBirthYear(year)
-
-    parameterMap = parameterMap + ("birthyear_gte" -> year.toString)
-  }
-
-  private def validateBirthYear(year: Int): Unit = {
+  def setBirthYear(year: Int, queryEval: QueryEval = QueryEval.EQ): Unit = {
     if (year > 9999 || year < 1000)
       throw new IllegalArgumentException(s"Year must be 4 digits, ${year} is an invalid birth year.")
+
+    queryEval match {
+      case QueryEval.EQ => parameterMap = parameterMap + ("birthyear" -> year.toString)
+      case QueryEval.GTE => parameterMap = parameterMap + ("birthyear_gte" -> year.toString)
+      case QueryEval.LTE => parameterMap = parameterMap + ("birthyear_lte" -> year.toString)
+    }
   }
 }
