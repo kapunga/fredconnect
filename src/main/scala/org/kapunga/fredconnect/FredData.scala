@@ -102,25 +102,6 @@ case class Tournament(id: Int, name: String, venue: Venue, division: Division, e
   "fee" : 0,
   "fee_currency" : "USD",
   "more_info" : "Mixed open foil. Non-NEUSFA, fast paced, less wait. Entry fee is tax deductible fee as proceeds go to Moe Fencing Foundation: 501(c)(3) providing underserved K-12 Greater Boston youth access to a comprehensive fencing program. Great training tournament!\r\n\r\nNO Y10 FENCERS WITHOUT PRIOR APPROVAL of MOE WEN COACH!\r\n\r\nIf you are not pre-paid before the close of registration, the event fee doubles (so pre-pay online in advance or pay $40 at the door.)\r\n\r\nEvents Scheduled:\r\nMixed Foil check in closes at 6:45pm.\r\n\r\nOnce pools are posted, we cannot accept new entries. We will not give refunds to fencers who are late.\r\n\r\nProof of USFA membership and full fencing uniform (including electric bib and long socks) required.\r\n\r\nActivity participation waiver required. May be completed on day of event at venue.\r\n\r\n*all paying participants are included in a raffle with prize of minimum $15 value if the tournament raises $100 or more for Moe Fencing Foundation Inc.\r\n\r\nMoe Wen Fencing Club is a private club and reserves the right to review and deny participation in events held at its venue on a case by case basis.\r\n\r\n\r\nPreregistration opens on 09/22/2014.\r\nPreregistration closes on 09/25/2014.\r\n\r\n",
-  "events" : [ {
-  "id" : 110746,
-  "tournament_id" : 28004,
-  "tournament" : "Moe Found Friday Foil Open #67",
-  "full_name" : "Unsanctioned Mixed Foil",
-  "weapon" : "Foil",
-  "gender" : "Mixed",
-  "authority" : { },
-  "age_limit" : "None",
-  "rating_limit" : "Open",
-  "rating" : "",
-  "rating_prediction" : "",
-  "entries" : 0,
-  "prereg_count" : 19,
-  "is_team" : false,
-  "description" : "",
-  "close_of_reg" : "2014-09-26T18:45:00-04:00",
-  "fee" : "20.00"
-} ]
 }
 */
 

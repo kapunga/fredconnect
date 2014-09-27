@@ -7,11 +7,11 @@ import play.api.libs.json.{JsArray, JsValue}
 
 object FredDataParsers {
   def parseFencer(jsValue: JsValue): Fencer = {
-    val id = parseInt(jsValue \ "id", -1)
+    val id = parseInt(jsValue \ "id")
 
-    val firstName = parseString(jsValue \ "first_name", "")
+    val firstName = parseString(jsValue \ "first_name")
 
-    val lastName = parseString(jsValue \ "last_name", "")
+    val lastName = parseString(jsValue \ "last_name")
 
     val gender = parseGender(jsValue \ "gender")
 
@@ -78,7 +78,7 @@ object FredDataParsers {
   }
 
   def parseDivision(jsValue: JsValue): Division = {
-    val id = parseInt(jsValue \ "id", -1)
+    val id = parseInt(jsValue \ "id")
     val name = parseString(jsValue \ "name", "Unattached")
     val abbrev = parseString(jsValue \ "abbrev", "UNATT")
 

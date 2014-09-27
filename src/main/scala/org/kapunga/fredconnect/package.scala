@@ -1,9 +1,19 @@
 package org.kapunga
 
+import scala.language.implicitConversions
+
 /**
  * Created by kapunga on 9/24/14.
  */
 package object fredconnect {
+  abstract class QueryParams {
+    val MAX_IDS:Int = 100
+
+    def getQueryMap(): Map[String, String]
+  }
+
+  implicit def queryParamsToMap(queryParams: QueryParams): Map[String, String] = queryParams.getQueryMap()
+
   object Weapon extends Enumeration {
     type Weapon = Value
 

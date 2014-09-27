@@ -31,6 +31,18 @@ class AskFredClient(apiKey: String) {
   }
 
   /**
+   * Queries askFred for an arbitrary list of Fencers specified by the query parameters.
+   *
+   * @see org.kapunga.fredconnect.FencerQueryParams
+   *
+   * @param params A set of parameters to query for.
+   * @return The list of fencers that matches the returned set of fencers.
+   */
+  def getFencers(params: FencerQueryParams): List[Fencer] = {
+    apiClient.listQuery(fencer, params).map(parseFencer).toList
+  }
+
+  /**
    * Queries askFred for a fencer by their USFA id.  Note that askFred does not have an exhaustive list
    * of USFA fencers, only ones who have competed in events reported to Fred.
    *
