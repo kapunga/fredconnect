@@ -10,6 +10,13 @@ package object fredconnect {
     val MAX_IDS:Int = 100
 
     def getQueryMap(): Map[String, String]
+    
+    protected def getIdsKv(tag: String)(implicit ids: List[Int]): (String, String) = {
+      if (ids.length > MAX_IDS)
+        throw new IllegalArgumentException(s"${ids.length} is greater than the maximum ids of ${MAX_IDS}.")
+      
+      (tag -> ids.mkString(","))
+    }
   }
 
   implicit def queryParamsToMap(queryParams: QueryParams): Map[String, String] = queryParams.getQueryMap()
@@ -26,6 +33,12 @@ package object fredconnect {
     val A, B, C, D, E, U = Value
   }
 
+  object EventRating extends Enumeration {
+    type EventRating = Value
+
+    val A1, A2, A3, A4, B1, B2, B3, C1, C2, C3, D1, E1, Unrated = Value
+  }
+
   object RatingLimit extends Enumeration {
     type RatingLimit = Value
 
@@ -38,6 +51,13 @@ package object fredconnect {
     val None, Y8, Y10, Y12, Y14, U16, U19, Vet40, Vet50, Vet60, Vet70, VetCombined = Value
   }
 
+  object SearchAgeLimit extends Enumeration {
+    type SearchAgeLimit = Value
+
+    val None, Y8, Y10, Y12, Y14, U16, U19, Vet40, Vet50, Vet60, Vet70, Vetcombined, Youth,
+        Cadet, Junior, Cadet_lte, Junior_lte, Senior, Open, Senior_Open, Veteran = Value
+  }
+
   object Gender extends Enumeration {
     type Gender = Value
 
@@ -48,6 +68,12 @@ package object fredconnect {
     type EventGender = Value
 
     val Men, Women, Mixed = Value
+  }
+
+  object SearchGender extends Enumeration {
+    type SearchGender = Value
+
+    val Men, Men_Mixed, Women, Women_Mixed, Mixed = Value
   }
 
   object QueryEval extends Enumeration {
