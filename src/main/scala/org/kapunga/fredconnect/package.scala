@@ -38,6 +38,17 @@ package object fredconnect {
     type RatingLetter = Value
 
     val A, B, C, D, E, U = Value
+
+    def getRatingLetter(letter: String): RatingLetter = {
+      letter match {
+        case "A" => A
+        case "B" => B
+        case "C" => C
+        case "D" => D
+        case "E" => E
+        case _ => U
+      }
+    }
   }
 
   object EventRating extends Enumeration {

@@ -105,6 +105,43 @@ class AskFredClient(apiKey: String) {
       case None => None
     }
   }
+
+  def getTournaments(queryParams: TournamentQueryParams): List[Tournament] = {
+    apiClient.listQuery(tournament, queryParams).map(parseTournament).toList
+  }
+
+  def getEvent(id: Int): Option[Event] = {
+    apiClient.idQuery(event, id) match {
+      case Some(jsResult) => Some(parseEvent(jsResult))
+      case None => None
+    }
+  }
+
+  def getEvents(queryParams: EventQueryParams): List[Event] = {
+    apiClient.listQuery(event, queryParams).map(parseEvent).toList
+  }
+
+  def getResult(id: Int): Option[Result] = {
+    apiClient.idQuery(result, id) match {
+      case Some(jsResult) => Some(parseResult(jsResult))
+      case None => None
+    }
+  }
+
+  def getResults(queryParams: ResultQueryParams): List[Result] = {
+    apiClient.listQuery(result, queryParams).map(parseResult).toList
+  }
+
+  def getRoundResult(id: Int): Option[RoundResult] = {
+    apiClient.idQuery(roundresult, id) match {
+      case Some(jsResult) => Some(parseRoundResult(jsResult))
+      case None => None
+    }
+  }
+
+  def getRoundResults(queryParams: RoundResultQueryParams): List[RoundResult] = {
+    apiClient.listQuery(roundresult, queryParams).map(parseRoundResult).toList
+  }
 }
 
 

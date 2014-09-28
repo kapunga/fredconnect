@@ -2,6 +2,7 @@ package org.kapunga.fredconnect
 
 import org.kapunga.fredconnect.AgeLimit.AgeLimit
 import org.kapunga.fredconnect.EventGender.EventGender
+import org.kapunga.fredconnect.EventRating.EventRating
 import org.kapunga.fredconnect.RatingLimit.RatingLimit
 import org.kapunga.fredconnect.Weapon.Weapon
 import org.kapunga.fredconnect.RatingLetter.RatingLetter
@@ -44,7 +45,7 @@ case class Club(id: Int, name: String, initials: String) extends FredData
  * @param year
  * @param authority
  */
-case class Rating(id: Int, weapon: Weapon, letter: RatingLetter, year: String, authority: String) extends FredData {
+case class Rating(id: Int, weapon: Weapon, letter: RatingLetter, year: String, authority: String = "USFA") extends FredData {
   def shortValue(): String = {
     letter match {
       case RatingLetter.U => "U"
@@ -68,6 +69,9 @@ case class Rating(id: Int, weapon: Weapon, letter: RatingLetter, year: String, a
  */
 case class Venue(name: String, address: String, city: String, state: String, zipCode: String, country: String,
                  timezone: String, latitude: Double, longitude: Double, precision: String)
+
+case class Competitor(id: Int, competitorId: Int, rating: Rating, club: Club, authorityId: AuthorityId,
+                      firstName: String, lastName: String, gender: Gender, birthYear: Int) extends FredData
 
 /**
  *
@@ -106,14 +110,58 @@ case class Tournament(id: Int, name: String, venue: Venue, division: Division, e
 */
 
 case class Event(id: Int, tournamentId: Int, name: String, weapon: Weapon, gender: EventGender, ageLimit: AgeLimit,
-                 ratingLimit: RatingLimit, entries: Int, preRegs: Int, isTeamEvent: Boolean) extends FredData
+                 ratingLimit: RatingLimit, entries: Int, preRegs: Int, isTeamEvent: Boolean, rating: EventRating,
+                 ratingPrediction: EventRating, preregs: List[Competitor]) extends FredData
 /*
 {
   "authority" : { },
-  "rating" : "",
-  "rating_prediction" : "",
   "description" : "",
   "close_of_reg" : "2014-09-26T18:45:00-04:00",
   "fee" : "20.00"
 }
 */
+
+
+case class Result(id: Int, eventId: Int, tournamentId: Int, competitorId: Int, firstName: String, lastName: String,
+                  venue: Venue, club: Club) extends FredData
+/*
+{
+  "first_name" : "Paul",
+  "last_name" : "Thordarson",
+  "tournament_name" : "2014 Massachusetts Bay State Games",
+  "tournament_start_date" : "2014-07-11",
+  "tournament_end_date" : "2014-07-13",
+  "venue_name" : "Prise De Fer Fencing Club",
+  "venue_address" : "71 Faulkner St",
+  "venue_city" : "Billerica",
+  "venue_state" : "MA",
+  "venue_zip" : "01862",
+  "venue_country" : "USA",
+  "venue_latitude" : 42.592204,
+  "venue_longitude" : -71.284101,
+  "venue_geo_precision" : "street",
+  "weapon" : "Epee",
+  "gender" : "Men",
+  "age_limit" : "Senior",
+  "rating_limit" : "Open",
+  "event_rating" : "B2",
+  "entries" : 35,
+  "is_team" : false,
+  "event_desc" : "",
+  "event_date" : "2014-07-13",
+  "event_time" : "13:30:00",
+  "authority" : "USFA",
+  "place" : 23,
+  "tournament_division_id" : 42,
+  "competitor_division_id" : 42,
+  "club_id_1" : 6859,
+  "club_1_name" : "Olympia Fencing Center",
+  "club_1_initials" : "OLYMPIAFC",
+  "rating_before_letter" : "D",
+  "rating_before_year" : 2014,
+  "is_excluded" : false,
+  "is_withdraw" : false
+}
+ */
+
+case class RoundResult(id: Int) extends FredData

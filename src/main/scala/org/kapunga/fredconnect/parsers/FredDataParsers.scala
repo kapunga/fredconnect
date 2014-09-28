@@ -66,7 +66,71 @@ object FredDataParsers {
 
     val isTeamEvent = parseBoolean(jsValue \ "is_team")
 
-    new Event(id, tournamentId, name, weapon, gender, ageLimit, ratingLimit, entries, preRegs, isTeamEvent)
+    val rating = parseEventRating(jsValue \ "rating")
+
+    val ratingPrediction = parseEventRating(jsValue \ "rating_prediction")
+
+    val preregs = (jsValue \ "preregs") match {
+      case JsArray(seq) => seq.map(prereg => parseCompetitor(prereg, weapon)).toList
+      case _ => List[Competitor]()
+    }
+
+    new Event(id, tournamentId, name, weapon, gender, ageLimit, ratingLimit, entries, preRegs, isTeamEvent, rating,
+              ratingPrediction, preregs)
+  }
+
+  def parseResult(jsValue: JsValue): Result = {
+    val id = parseInt(jsValue \ "id")
+
+    val eventId = parseInt(jsValue \ "event_id")
+
+    val tournamentId = parseInt(jsValue \ "tournament_id")
+
+    val competitorId = parseInt(jsValue \ "competitor_id")
+
+    val firstName = parseString(jsValue \ "first_name")
+
+    val lastName = parseString(jsValue \ "last_name")
+
+    val club = parseResultClub(jsValue)
+
+    val venue = parseResultVenue(jsValue)
+
+    new Result(id, eventId, tournamentId, competitorId, firstName, lastName, venue, club)
+  }
+
+  def parseRoundResult(jsValue: JsValue): RoundResult = {
+    val id = parseInt(jsValue \ "id")
+
+    new RoundResult(id)
+  }
+
+  def parseCompetitor(jsValue: JsValue, weapon: Weapon): Competitor = {
+    val id = parseInt(jsValue \ "id")
+    val competitorId = parseInt(jsValue \ "competitor_id")
+
+    val rawRating = parseString(jsValue \ "rating")
+
+    val rating = rawRating.length match {
+      case 5 => new Rating(-1, weapon, RatingLetter.getRatingLetter(rawRating.charAt(0).toString), rawRating.substring(1))
+      case _ => new Rating(-1, weapon, RatingLetter.U, "")
+    }
+
+    val club = parseClub(jsValue \ "club")
+
+    val competitor = jsValue \ "competitor"
+
+    val authorityId = parseAuthorityId(competitor)
+
+    val firstName = parseString(competitor \ "first_name")
+
+    val lastName = parseString(competitor \ "last_name")
+
+    val gender = parseGender(competitor \ "gender")
+
+    val birthYear = parseInt(competitor \ "birthyear")
+
+    new Competitor(id, competitorId, rating, club, authorityId, firstName, lastName, gender, birthYear)
   }
 
   def parseAuthorityId(jsValue: JsValue): AuthorityId = {
@@ -109,6 +173,14 @@ object FredDataParsers {
   }
 
   def parseClub(jsValue: JsValue): Club = {
+    val id = parseInt(jsValue \ "club_id_1")
+    val name = parseString(jsValue \ "club_1_name")
+    val initials = parseString(jsValue \ "club_1_initials")
+
+    new Club(id, name, initials)
+  }
+
+  def parseResultClub(jsValue: JsValue): Club = {
     val id = parseInt(jsValue \ "id")
     val name = parseString(jsValue \ "name")
     val initials = parseString(jsValue \ "initials")
@@ -146,6 +218,21 @@ object FredDataParsers {
     val latitude = parseDouble(jsValue \ "latitude")
     val longitude = parseDouble(jsValue \ "longitude")
     val precision = parseString(jsValue \ "geocode_precision")
+
+    new Venue(name, address, city, state, zipCode, country, timeZone, latitude, longitude, precision)
+  }
+
+  def parseResultVenue(jsValue: JsValue): Venue = {
+    val name = parseString(jsValue \ "venue_name")
+    val address = parseString(jsValue \ "venue_address")
+    val city = parseString(jsValue \ "venue_city")
+    val state = parseString(jsValue \ "venue_state")
+    val zipCode = parseString(jsValue \ "venue_zip")
+    val country = parseString(jsValue \ "venue_country")
+    val timeZone = ""
+    val latitude = parseDouble(jsValue \ "venue_latitude")
+    val longitude = parseDouble(jsValue \ "venue_longitude")
+    val precision = parseString(jsValue \ "venue_geo_precision")
 
     new Venue(name, address, city, state, zipCode, country, timeZone, latitude, longitude, precision)
   }

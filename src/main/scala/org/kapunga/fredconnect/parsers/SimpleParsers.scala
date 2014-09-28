@@ -4,6 +4,7 @@ import java.util.Date
 
 import org.kapunga.fredconnect.AgeLimit.AgeLimit
 import org.kapunga.fredconnect.EventGender.EventGender
+import org.kapunga.fredconnect.EventRating.EventRating
 import org.kapunga.fredconnect.Gender
 import org.kapunga.fredconnect.Gender._
 import org.kapunga.fredconnect.RatingLetter
@@ -66,6 +67,24 @@ object SimpleParsers {
       case "vet70" => AgeLimit.Vet70
       case "vetcombined" => AgeLimit.VetCombined
       case _ => AgeLimit.None
+    }
+  }
+
+  def parseEventRating(jsValue: JsValue): EventRating = {
+    parseString(jsValue, "unrated").toLowerCase match {
+      case "a4" => EventRating.A4
+      case "a3" => EventRating.A3
+      case "a2" => EventRating.A2
+      case "a1" => EventRating.A1
+      case "b3" => EventRating.B3
+      case "b2" => EventRating.B2
+      case "b1" => EventRating.B1
+      case "c3" => EventRating.C3
+      case "c2" => EventRating.C2
+      case "c1" => EventRating.C1
+      case "d1" => EventRating.D1
+      case "e1" => EventRating.E1
+      case _ => EventRating.Unrated
     }
   }
 
