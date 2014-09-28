@@ -1,5 +1,7 @@
 package org.kapunga.fredconnect
 
+import java.util.Date
+
 import org.kapunga.fredconnect.AgeLimit.AgeLimit
 import org.kapunga.fredconnect.EventGender.EventGender
 import org.kapunga.fredconnect.EventRating.EventRating
@@ -123,42 +125,29 @@ case class Event(id: Int, tournamentId: Int, name: String, weapon: Weapon, gende
 
 
 case class Result(id: Int, eventId: Int, tournamentId: Int, competitorId: Int, firstName: String, lastName: String,
-                  venue: Venue, club: Club) extends FredData
+                  tournamentName: String, tournamentStart: Date, tournamentEnd: Date, venue: Venue, weapon: Weapon,
+                  gender: EventGender, club: Club) extends FredData
 /*
 {
-  "first_name" : "Paul",
-  "last_name" : "Thordarson",
-  "tournament_name" : "2014 Massachusetts Bay State Games",
-  "tournament_start_date" : "2014-07-11",
-  "tournament_end_date" : "2014-07-13",
-  "venue_name" : "Prise De Fer Fencing Club",
-  "venue_address" : "71 Faulkner St",
-  "venue_city" : "Billerica",
-  "venue_state" : "MA",
-  "venue_zip" : "01862",
-  "venue_country" : "USA",
-  "venue_latitude" : 42.592204,
-  "venue_longitude" : -71.284101,
-  "venue_geo_precision" : "street",
-  "weapon" : "Epee",
-  "gender" : "Men",
   "age_limit" : "Senior",
   "rating_limit" : "Open",
-  "event_rating" : "B2",
-  "entries" : 35,
+  "event_rating" : "A4",
+  "entries" : 71,
   "is_team" : false,
   "event_desc" : "",
-  "event_date" : "2014-07-13",
-  "event_time" : "13:30:00",
+  "event_date" : "2014-06-14",
+  "event_time" : "08:00:00",
   "authority" : "USFA",
-  "place" : 23,
+  "place" : 28,
   "tournament_division_id" : 42,
   "competitor_division_id" : 42,
   "club_id_1" : 6859,
   "club_1_name" : "Olympia Fencing Center",
   "club_1_initials" : "OLYMPIAFC",
   "rating_before_letter" : "D",
-  "rating_before_year" : 2014,
+  "rating_before_year" : 2013,
+  "rating_Earned_letter" : "D",
+  "rating_Earned_year" : 2014,
   "is_excluded" : false,
   "is_withdraw" : false
 }

@@ -92,11 +92,22 @@ object FredDataParsers {
 
     val lastName = parseString(jsValue \ "last_name")
 
-    val club = parseResultClub(jsValue)
-
     val venue = parseResultVenue(jsValue)
 
-    new Result(id, eventId, tournamentId, competitorId, firstName, lastName, venue, club)
+    val tournamentName = parseString(jsValue \ "tournament_name")
+
+    val tournamentStart = parseDate(jsValue \ "tournament_start_date")
+
+    val tournamentEnd = parseDate(jsValue \ "tournament_end_date")
+
+    val weapon = parseWeapon(jsValue \ "")
+
+    val gender = parseEventGender(jsValue \ "")
+
+    val club = parseResultClub(jsValue)
+
+    new Result(id, eventId, tournamentId, competitorId, firstName, lastName, tournamentName, tournamentStart,
+               tournamentEnd, venue, weapon, gender, club)
   }
 
   def parseRoundResult(jsValue: JsValue): RoundResult = {
