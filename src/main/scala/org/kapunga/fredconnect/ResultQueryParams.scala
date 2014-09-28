@@ -1,12 +1,23 @@
 package org.kapunga.fredconnect
 
+import java.util.Date
+
+import org.kapunga.fredconnect.QueryEval._
+import org.kapunga.fredconnect.RatingLetter.RatingLetter
 import org.kapunga.fredconnect.RatingLimit._
 import org.kapunga.fredconnect.SearchAgeLimit._
 import org.kapunga.fredconnect.SearchGender._
 import org.kapunga.fredconnect.Weapon._
 
 /**
- * Created by kapunga on 9/27/14.
+ * There are currently seven parameters askFred takes for results which we do not support:
+ * date_1_eq
+ * date_1_gte
+ * date_1_lte
+ * date_2_eq
+ * date_2_gte
+ * date_2_lte
+ * authority
  */
 class ResultQueryParams extends QueryParams {
   private var parameterMap: Map[String, String] = Map()
@@ -14,13 +25,19 @@ class ResultQueryParams extends QueryParams {
   @Override
   def getQueryMap(): Map[String, String] = parameterMap
 
-  // 1 result_ids	comma separated list of integers	2,6,34,3,75	maximum 100 ids
-  // 2	event_id	integer
-  // 3	event_ids	comma separated list of integers	2,6,34,3,75	maximum 100 ids
-  // 4	tournament_id	integer
-  // 5	tournament_ids	comma separated list of integers	2,6,34,3,75	maximum 100 ids
-  // 6	competitor_id	integer
-  // 7	competitor_ids	comma separated list of integers	2,6,34,3,75	maximum 100 ids
+  def setResultIds(implicit ids: List[Int]): Unit = parameterMap = parameterMap + getIdsKv("result_ids")
+
+  def setEventId(id: Int): Unit = parameterMap = parameterMap + ("event_id" -> id.toString)
+  
+  def setEventIds(implicit ids: List[Int]): Unit = parameterMap = parameterMap + getIdsKv("event_ids")
+  
+  def setTournamentId(id: Int): Unit = parameterMap = parameterMap + ("tournament_id" -> id.toString)
+  
+  def setTournamentIds(implicit ids: List[Int]): Unit = parameterMap = parameterMap + getIdsKv("tournament_ids")
+  
+  def setCompetitorId(id: Int): Unit = parameterMap = parameterMap + ("competitor_id" -> id.toString)
+  
+  def setCompetitorIds(implicit ids: List[Int]): Unit = parameterMap = parameterMap + getIdsKv("competitor_ids")
 
   /**
    *
@@ -46,16 +63,41 @@ class ResultQueryParams extends QueryParams {
     }
   }
 
-  // 12	team_name	string		case insensitive full string match
-  // 13	team_name_contains	string		case insensitive full string match
-  // 14	tournament_name	string		case insensitive full string match
-  // 15	tournament_name_contains	string		case insensitive full string match
-  // 16	tournament_start_date_eq	ISO 8601 date	2013-02-16
-  // 17	tournament_start_date_gte	ISO 8601 date	2013-02-16
-  // 18	tournament_start_date_lte	ISO 8601 date	2013-02-16
-  // 19	tournament_end_date_eq	ISO 8601 date	2013-02-16
-  // 20	tournament_end_date_gte	ISO 8601 date	2013-02-16
-  // 21	tournament_end_date_lte	ISO 8601 date	2013-02-16
+  def setTeamName(teamName: String, exact: Boolean = true): Unit = {
+    parameterMap = exact match {
+      case true => parameterMap + ("team_name" -> teamName)
+      case false => parameterMap + ("team_name_contains" -> teamName)
+    }
+  }
+  
+  def setTournamentName(tournamentName: String, exact: Boolean = true): Unit = {
+    parameterMap = exact match {
+      case true => parameterMap + ("tournament_name" -> tournamentName)
+      case false => parameterMap + ("tournament_name_contains" -> tournamentName)
+    }
+  }
+
+  def setTournamentStartDate(tournamentStartDate: Date, queryEval: QueryEval = QueryEval.EQ): Unit = {
+    queryEval match {
+      case QueryEval.EQ => parameterMap = parameterMap + 
+        ("tournament_start_date_eq" -> defaultDateFormat.format(tournamentStartDate))
+      case QueryEval.LTE => parameterMap = parameterMap + 
+        ("tournament_start_date_lte" -> defaultDateFormat.format(tournamentStartDate))
+      case QueryEval.GTE => parameterMap = parameterMap + 
+        ("tournament_start_date_gte" -> defaultDateFormat.format(tournamentStartDate))
+    }
+  }
+
+  def setTournamentEndDate(tournamentEndDate: Date, queryEval: QueryEval = QueryEval.EQ): Unit = {
+    queryEval match {
+      case QueryEval.EQ => parameterMap = parameterMap + 
+        ("tournament_end_date_eq" -> defaultDateFormat.format(tournamentEndDate))
+      case QueryEval.LTE => parameterMap = parameterMap + 
+        ("tournament_end_date_lte" -> defaultDateFormat.format(tournamentEndDate))
+      case QueryEval.GTE => parameterMap = parameterMap + 
+        ("tournament_end_date_gte" -> defaultDateFormat.format(tournamentEndDate))
+    }
+  }
 
   /**
    *
@@ -92,10 +134,13 @@ class ResultQueryParams extends QueryParams {
    */
   def setRatingLimit(ratingLimit: RatingLimit): Unit = parameterMap = parameterMap + ("rating_limit" -> ratingLimit.toString)
 
-
-  // 26	entries_eq	integer
-  // 27	entries_gte	integer
-  // 28	entries_lte	integer
+  def setEntries(entries: Int, queryEval: QueryEval = QueryEval.EQ): Unit = {
+    queryEval match {
+      case QueryEval.EQ => parameterMap = parameterMap + ("entries_eq" -> entries.toString)
+      case QueryEval.LTE => parameterMap = parameterMap + ("entries_lte" -> entries.toString)
+      case QueryEval.GTE => parameterMap = parameterMap + ("entries_gte" -> entries.toString)
+    }
+  }
 
   /**
    *
@@ -107,33 +152,74 @@ class ResultQueryParams extends QueryParams {
       case false => parameterMap = parameterMap + ("is_team" -> "0")
     }
   }
-  // 30	date_1_eq	ISO 8601 date	2013-02-16	Two date filters can be used in conjunction to acheive between behavior.
-  // 31	date_1_gte	ISO 8601 date	2013-02-16
-  // 32	date_1_lte	ISO 8601 date	2013-02-16
-  // 33	date_2_eq	ISO 8601 date	2013-02-16
-  // 34	date_2_gte	ISO 8601 date	2013-02-16
-  // 35	date_2_lte	ISO 8601 date	2013-02-16
-  // 36	authority	enum
-  // 37	place_eq	integer
-  // 38	place_gte	integer
-  // 39	place_lte	integer
-  // 40	tournament_division_id	integer
-  // 41	tournament_division_ids	comma separated list of integers	2,6,34,3,75	maximum 100 ids
-  // 42	competitor_division_id	integer
-  // 43	competitor_division_ids	comma separated list of integers	2,6,34,3,75	maximum 100 ids
-  // 44	club_id	integer
-  // 45	rating_before_letter_eq	char		A, B, C, D, E, U
-  // 46	rating_before_letter_gte	char		A, B, C, D, E, U
-  // 47	rating_before_letter_lte	char		A, B, C, D, E, U
-  // 48	rating_before_year_eq	four digit year
-  // 49	rating_before_year_gte	four digit year
-  // 50	rating_before_year_lte	four digit year
-  // 51	rating_earned_letter_eq	char		A, B, C, D, E, U
-  // 52	rating_earned_letter_gte	char		A, B, C, D, E, U
-  // 53	rating_earned_letter_lte	char		A, B, C, D, E, U
-  // 54	rating_earned_year_eq	four digit year
-  // 55	rating_earned_year_gte	four digit year
-  // 56	rating_earned_year_lte	four digit year
-  // 57	is_excluded	1 or 0		1 = true, 0 = false
-  // 58	is_withdraw	1 or 0		1 = true, 0 = false
+
+  def setPlace(place: Int, queryEval: QueryEval = QueryEval.EQ): Unit = {
+    queryEval match {
+      case QueryEval.EQ => parameterMap = parameterMap + ("place_eq" -> place.toString)
+      case QueryEval.LTE => parameterMap = parameterMap + ("place_lte" -> place.toString)
+      case QueryEval.GTE => parameterMap = parameterMap + ("place_gte" -> place.toString)
+    }
+  }
+
+  def setTournamentDivisionId(id: Int): Unit = parameterMap = parameterMap + ("tournament_division_id" -> id.toString)
+
+  def setTournamentDivisionIds(implicit ids: List[Int]): Unit = parameterMap = parameterMap + getIdsKv("tournament_division_ids")
+
+  def setCompetitorDivisionId(id: Int): Unit = parameterMap = parameterMap + ("competitor_division_id" -> id.toString)
+
+  def setCompetitorDivisionIds(implicit ids: List[Int]): Unit = parameterMap = parameterMap + getIdsKv("competitor_division_ids")
+  
+  def setClubId(clubId: Int): Unit = parameterMap = parameterMap + ("club_id" -> clubId.toString)
+
+  def setRatingBeforeLetter(letter: RatingLetter, queryEval: QueryEval = QueryEval.EQ): Unit = {
+    queryEval match {
+      case QueryEval.EQ => parameterMap = parameterMap + ("rating_before_letter_eq" -> letter.toString)
+      case QueryEval.LTE => parameterMap = parameterMap + ("rating_before_letter_lte" -> letter.toString)
+      case QueryEval.GTE => parameterMap = parameterMap + ("rating_before_letter_gte" -> letter.toString)
+    }
+  }
+
+  def setRatingBeforeYear(year: Int, queryEval: QueryEval = QueryEval.EQ): Unit = {
+    if (year > 9999 || year < 1000)
+      throw new IllegalArgumentException(s"Year must be 4 digits, ${year} is an invalid birth year.")
+
+    queryEval match {
+      case QueryEval.EQ => parameterMap = parameterMap + ("rating_before_year_eq" -> year.toString)
+      case QueryEval.LTE => parameterMap = parameterMap + ("rating_before_year_lte" -> year.toString)
+      case QueryEval.GTE => parameterMap = parameterMap + ("rating_before_year_gte" -> year.toString)
+    }
+  }
+
+  def setRatingEarnedLetter(letter: RatingLetter, queryEval: QueryEval = QueryEval.EQ): Unit = {
+    queryEval match {
+      case QueryEval.EQ => parameterMap = parameterMap + ("rating_earned_letter_eq" -> letter.toString)
+      case QueryEval.LTE => parameterMap = parameterMap + ("rating_earned_letter_lte" -> letter.toString)
+      case QueryEval.GTE => parameterMap = parameterMap + ("rating_earned_letter_gte" -> letter.toString)
+    }
+  }
+
+  def setRatingEarnedYear(year: Int, queryEval: QueryEval = QueryEval.EQ): Unit = {
+    if (year > 9999 || year < 1000)
+      throw new IllegalArgumentException(s"Year must be 4 digits, ${year} is an invalid birth year.")
+
+    queryEval match {
+      case QueryEval.EQ => parameterMap = parameterMap + ("rating_earned_year_eq" -> year.toString)
+      case QueryEval.LTE => parameterMap = parameterMap + ("rating_earned_year_lte" -> year.toString)
+      case QueryEval.GTE => parameterMap = parameterMap + ("rating_earned_year_gte" -> year.toString)
+    }
+  }
+
+  def setIsExcluded(isExcluded: Boolean): Unit = {
+    isExcluded match {
+      case true => parameterMap = parameterMap + ("is_excluded" -> "1")
+      case false => parameterMap = parameterMap + ("is_excluded" -> "0")
+    }
+  }
+
+  def setIsWithdraw(isWithdraw: Boolean): Unit = {
+    isWithdraw match {
+      case true => parameterMap = parameterMap + ("is_withdraw" -> "1")
+      case false => parameterMap = parameterMap + ("is_withdraw" -> "0")
+    }
+  }
 }

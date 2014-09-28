@@ -1,5 +1,7 @@
 package org.kapunga.fredconnect.parsers
 
+import java.util.Date
+
 import org.kapunga.fredconnect.AgeLimit.AgeLimit
 import org.kapunga.fredconnect.EventGender.EventGender
 import org.kapunga.fredconnect.Gender
@@ -105,6 +107,13 @@ object SimpleParsers {
 
   def parseBoolean(jsValue: JsValue, defValue: Boolean = false): Boolean = {
     jsValue.asOpt[Boolean] match {
+      case Some(item) => item
+      case None => defValue
+    }
+  }
+
+  def parseDate(jsValue: JsValue, defValue: Date = new Date()): Date = {
+    jsValue.asOpt[Date] match {
       case Some(item) => item
       case None => defValue
     }

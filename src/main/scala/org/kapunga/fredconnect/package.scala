@@ -1,13 +1,20 @@
 package org.kapunga
 
+import java.text.SimpleDateFormat
+
+import play.api.libs.json.{Reads, Writes}
+
 import scala.language.implicitConversions
 
 /**
  * Created by kapunga on 9/24/14.
  */
 package object fredconnect {
+  val defaultDateFormat = new SimpleDateFormat("yyyy-MM-dd")
+  implicit val dateTimeReads = Reads.dateReads("yyyy-MM-dd")
+
   abstract class QueryParams {
-    val MAX_IDS:Int = 100
+    val MAX_IDS: Int = 100
 
     def getQueryMap(): Map[String, String]
     

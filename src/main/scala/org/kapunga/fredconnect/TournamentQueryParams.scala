@@ -1,5 +1,7 @@
 package org.kapunga.fredconnect
 
+import java.util.Date
+
 import org.kapunga.fredconnect.EventRating._
 import org.kapunga.fredconnect.QueryEval._
 import org.kapunga.fredconnect.SearchAgeLimit._
@@ -7,7 +9,7 @@ import org.kapunga.fredconnect.SearchGender._
 import org.kapunga.fredconnect.Weapon._
 
 /**
- * Created by kapunga on 9/27/14.
+ *
  */
 class TournamentQueryParams extends QueryParams {
   private var parameterMap: Map[String, String] = Map()
@@ -17,9 +19,9 @@ class TournamentQueryParams extends QueryParams {
 
   def setDivisionId(id: Int): Unit = parameterMap = parameterMap + ("division_id" -> id.toString)
 
-  def setDivisionIds(ids: List[Int]): Unit = parameterMap = parameterMap + getIdsKv("division_ids")
+  def setDivisionIds(implicit ids: List[Int]): Unit = parameterMap = parameterMap + getIdsKv("division_ids")
 
-  def setTournamentIds(ids: List[Int]): Unit = parameterMap = parameterMap + getIdsKv("tournament_ids")
+  def setTournamentIds(implicit ids: List[Int]): Unit = parameterMap = parameterMap + getIdsKv("tournament_ids")
 
   def setName(name: String, exact: Boolean = true): Unit = {
     exact match {
@@ -49,35 +51,112 @@ class TournamentQueryParams extends QueryParams {
     }
   }
 
-  // 12	start_date_eq	ISO 8601 date	2011-03-28	start date of the tournament equals
-  // 13	start_date_lte	ISO 8601 date	2011-03-28	start date of the tournament is less than or equal
-  // 14	start_date_gte	ISO 8601 date	2011-03-28	start date of the tournament is greater than or equal
-  // 15	end_date_eq	ISO 8601 date	2011-03-28	end date of the tournament equals. NOTE: end date is empty for one-day tournaments, so queries that specify end_date will exclude one-day tournaments
-  // 16	end_date_lte	ISO 8601 date	2011-03-28	end date of the tournament is less than or equal
-  // 17	end_date_gte	ISO 8601 date	2011-03-28	end date of the tournament is greater than or equal
-  // 18	prereg_open_eq	ISO 8601 date	2011-03-28	prereg opens on date
-  // 19	prereg_open_gte	ISO 8601 date	2011-03-28	prereg opens on or after date
-  // 20	prereg_open_lte	ISO 8601 date	2011-03-28	prereg opens on or before date
-  // 21	prereg_close_eq	ISO 8601 date	2011-03-28	prereg closes on date
-  // 22	prereg_close_gte	ISO 8601 date	2011-03-28	prereg closes on or after date
-  // 23	prereg_close_lte	ISO 8601 date	2011-03-28	prereg closes on or before date
-  // 24	section_id	integer
-  // 25	section_ids	comma separated list of integers	2,6,34,3,75	maximum 100 ids
-  // 26	address	string		case insensitive full string match
-  // 27	address_contains	string		case insensitive substring match
-  // 28	city	string		case insensitive full string match
-  // 29	city_contains	string		case insensitive substring match
-  // 30	state	two character string	WA	case insensitive full string match
-  // 31	zip	five digit zip or any valid canadian postal code	94109 or V6V 2S6
-  // 32	country	string	USA
-  // 33	lat	signed decimal up to 6 decimal digits	36.623423	Location based queries require both of lat, long, and at least one of radius_mi or radius_km. If any of those requirements are not met, the whole location query is ignored.
-  // 34	long	signed decimal up to 6 decimal digits	-132.623423
-  // 35	radius_mi	unsigned decimal up to 3 decimal digits	50.5	decimals are supported but not much more useful than an integer mile radius
-  // 36	radius_km	unsigned decimal up to 3 decimal digits	15.5	decimals are supported but not much more useful than an integer km radius
-  // 37	is_roc	1 or 0		1 = true, 0 = false
-  // 38	is_baycup	1 or 0		1 = true, 0 = false
-  // 39	is_cancelled	1 or 0		1 = true, 0 = false
+  def setStartDate(startDate: Date, queryEval: QueryEval = QueryEval.EQ): Unit = {
+    queryEval match {
+      case QueryEval.EQ => parameterMap = parameterMap + ("start_date_eq" -> defaultDateFormat.format(startDate))
+      case QueryEval.LTE => parameterMap = parameterMap + ("start_date_lte" -> defaultDateFormat.format(startDate))
+      case QueryEval.GTE => parameterMap = parameterMap + ("start_date_gte" -> defaultDateFormat.format(startDate))
+    }
+  }
 
+  def setEndDate(endDate: Date, queryEval: QueryEval = QueryEval.EQ): Unit = {
+    queryEval match {
+      case QueryEval.EQ => parameterMap = parameterMap + ("end_date_eq" -> defaultDateFormat.format(endDate))
+      case QueryEval.LTE => parameterMap = parameterMap + ("end_date_lte" -> defaultDateFormat.format(endDate))
+      case QueryEval.GTE => parameterMap = parameterMap + ("end_date_gte" -> defaultDateFormat.format(endDate))
+    }
+  }
+
+  def setPreregOpen(preregOpen: Date, queryEval: QueryEval = QueryEval.EQ): Unit = {
+    queryEval match {
+      case QueryEval.EQ => parameterMap = parameterMap + ("prereg_open_eq" -> defaultDateFormat.format(preregOpen))
+      case QueryEval.LTE => parameterMap = parameterMap + ("prereg_open_lte" -> defaultDateFormat.format(preregOpen))
+      case QueryEval.GTE => parameterMap = parameterMap + ("prereg_open_gte" -> defaultDateFormat.format(preregOpen))
+    }
+  }
+  
+  def setPreregClose(preregClose: Date, queryEval: QueryEval = QueryEval.EQ): Unit = {
+    queryEval match {
+      case QueryEval.EQ => parameterMap = parameterMap + ("prereg_close_eq" -> defaultDateFormat.format(preregClose))
+      case QueryEval.LTE => parameterMap = parameterMap + ("prereg_close_lte" -> defaultDateFormat.format(preregClose))
+      case QueryEval.GTE => parameterMap = parameterMap + ("prereg_close_gte" -> defaultDateFormat.format(preregClose))
+    }
+  }
+  
+  def setSectionId(id: Int): Unit = parameterMap = parameterMap + ("section_id" -> id.toString)
+  
+  def setSectionIds(implicit ids: List[Int]): Unit = parameterMap = parameterMap + getIdsKv("section_ids")
+
+  def setAddress(address: String, exact: Boolean = true): Unit = {
+    exact match {
+      case true => parameterMap = parameterMap + ("address" -> address)
+      case false => parameterMap = parameterMap + ("address_contains" -> address)
+    }
+  }
+
+  def setCity(city: String, exact: Boolean = true): Unit = {
+    exact match {
+      case true => parameterMap = parameterMap + ("city" -> city)
+      case false => parameterMap = parameterMap + ("city_contains" -> city)
+    }
+  }
+
+  def setState(state: String): Unit = {
+    if (state.length != 2)
+      throw new IllegalArgumentException(s"${state} is not a two letter state code.")
+
+    parameterMap = parameterMap + ("state" -> state)
+  }
+
+  def setZipCode(zipCode: String): Unit = parameterMap = parameterMap + ("zip" -> zipCode)
+
+  def setCountry(country: String): Unit = parameterMap = parameterMap + ("country" -> country)
+
+  def setRadius(latitude: Double, longitude: Double, radius: Double, isMiles: Boolean): Unit = {
+    parameterMap = parameterMap + ("lat" -> latitude.toString)
+    parameterMap = parameterMap + ("long" -> longitude.toString)
+
+    isMiles match {
+      case true => parameterMap = parameterMap - "radius_km"
+        parameterMap = parameterMap + ("radius_mi" -> radius.toString)
+      case false => parameterMap = parameterMap - "radius_mi"
+        parameterMap = parameterMap + ("radius_km" -> radius.toString)
+    }
+  }
+
+  /**
+   *
+   * @param isRoc
+   */
+  def setIsRoc(isRoc: Boolean): Unit = {
+    isRoc match {
+      case true => parameterMap = parameterMap + ("is_roc" -> "1")
+      case false => parameterMap = parameterMap + ("is_roc" -> "0")
+    }
+  }
+
+  /**
+   *
+   * @param isBayCup
+   */
+  def setIsBayCup(isBayCup: Boolean): Unit = {
+    isBayCup match {
+      case true => parameterMap = parameterMap + ("is_baycup" -> "1")
+      case false => parameterMap = parameterMap + ("is_baycup" -> "0")
+    }
+  }
+
+  /**
+   *
+   * @param isCancelled
+   */
+  def setIsCancelled(isCancelled: Boolean): Unit = {
+    isCancelled match {
+      case true => parameterMap = parameterMap + ("is_cancelled" -> "1")
+      case false => parameterMap = parameterMap + ("is_cancelled" -> "0")
+    }
+  }
+  
   /**
    *
    * @param weapon

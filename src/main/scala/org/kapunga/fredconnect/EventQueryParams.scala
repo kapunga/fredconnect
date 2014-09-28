@@ -20,7 +20,7 @@ class EventQueryParams extends QueryParams {
    *
    * @param ids
    */
-  def setEventIds(ids: List[Int]): Unit = parameterMap = parameterMap + getIdsKv("event_ids")
+  def setEventIds(implicit ids: List[Int]): Unit = parameterMap = parameterMap + getIdsKv("event_ids")
 
   /**
    *
@@ -32,7 +32,7 @@ class EventQueryParams extends QueryParams {
    *
    * @param ids
    */
-  def setTournamentIds(ids: List[Int]): Unit = parameterMap = parameterMap + getIdsKv("tournament_ids")
+  def setTournamentIds(implicit ids: List[Int]): Unit = parameterMap = parameterMap + getIdsKv("tournament_ids")
 
   /**
    *

@@ -32,7 +32,7 @@ class FencerQueryParams extends QueryParams {
    * @param ids A list of fencer ids to look up.
    * @throws IllegalArgumentException If ids is longer than the maximum allowed number, @see QueryParams#MAX_IDS
    */
-  def setFencerIds(ids: List[Int]): Unit = parameterMap = parameterMap + getIdsKv("fencer_ids")
+  def setFencerIds(implicit ids: List[Int]): Unit = parameterMap = parameterMap + getIdsKv("fencer_ids")
 
   /**
    *
@@ -85,7 +85,7 @@ class FencerQueryParams extends QueryParams {
    *
    * @param ids
    */
-  def setClubs(ids: List[Int]): Unit = parameterMap = parameterMap + getIdsKv("club_ids")
+  def setClubs(implicit ids: List[Int]): Unit = parameterMap = parameterMap + getIdsKv("club_ids")
 
   /**
    *
@@ -97,7 +97,7 @@ class FencerQueryParams extends QueryParams {
    *
    * @param ids
    */
-  def setDivisions(ids: List[Int]): Unit = parameterMap = parameterMap + getIdsKv("division_ids")
+  def setDivisions(implicit ids: List[Int]): Unit = parameterMap = parameterMap + getIdsKv("division_ids")
 
   /**
    *
