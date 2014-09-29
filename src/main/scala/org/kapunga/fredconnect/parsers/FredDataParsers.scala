@@ -106,8 +106,24 @@ object FredDataParsers {
 
     val club = parseResultClub(jsValue)
 
+    val ratingBeforeLetter = parseRatingLetter(jsValue \ "rating_before_letter")
+
+    val ratingBeforeYear = parseInt(jsValue \ "rating_before_year", 1970)
+
+    val ratingEarnedLetter = parseRatingLetter(jsValue \ "rating_Earned_letter")
+
+    val ratingEarnedYear = parseInt(jsValue \ "rating_Earned_year", 1970)
+
+    val beforeRating = new Rating(-1, weapon, ratingBeforeLetter, ratingBeforeYear.toString)
+
+    val earnedRating = new Rating(-1, weapon, ratingEarnedLetter, ratingEarnedYear.toString)
+
+    val excluded = parseBoolean(jsValue \ "is_excluded")
+
+    val withdrawn = parseBoolean(jsValue \ "is_withdraw")
+
     new Result(id, eventId, tournamentId, competitorId, firstName, lastName, tournamentName, tournamentStart,
-               tournamentEnd, venue, weapon, gender, club)
+               tournamentEnd, venue, weapon, gender, club, beforeRating, earnedRating, excluded, withdrawn)
   }
 
   def parseRoundResult(jsValue: JsValue): RoundResult = {

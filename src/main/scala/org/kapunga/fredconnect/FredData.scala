@@ -139,7 +139,8 @@ case class Event(id: Int, tournamentId: Int, name: String, weapon: Weapon, gende
 
 case class Result(id: Int, eventId: Int, tournamentId: Int, competitorId: Int, firstName: String, lastName: String,
                   tournamentName: String, tournamentStart: Date, tournamentEnd: Date, venue: Venue, weapon: Weapon,
-                  gender: EventGender, club: Club) extends FredData
+                  gender: EventGender, club: Club, ratingBefore: Rating, earnedRating: Rating, excluded: Boolean,
+                  withdrawn: Boolean) extends FredData
 /*
 {
   "age_limit" : "Senior",
@@ -154,21 +155,8 @@ case class Result(id: Int, eventId: Int, tournamentId: Int, competitorId: Int, f
   "place" : 28,
   "tournament_division_id" : 42,
   "competitor_division_id" : 42,
-  "club_id_1" : 6859,
-  "club_1_name" : "Olympia Fencing Center",
-  "club_1_initials" : "OLYMPIAFC",
-  "rating_before_letter" : "D",
-  "rating_before_year" : 2013,
-  "rating_Earned_letter" : "D",
-  "rating_Earned_year" : 2014,
-  "is_excluded" : false,
-  "is_withdraw" : false
 }
  */
 
 case class RoundResult(id: Int, tournamentId: Int, eventId: Int, roundType: RoundType, roundDesc: String,
                        roundSeq: Int, bouts: List[Bout]) extends FredData
-
-/*
-  "pools" :
- */
