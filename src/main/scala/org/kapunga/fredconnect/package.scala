@@ -100,6 +100,18 @@ package object fredconnect {
     val LTE, GTE, EQ = Value
   }
 
+  object RoundType extends Enumeration {
+    type RoundType = Value
+
+    val POOLS, DE_TABLES = Value
+  }
+
+  object BoutResult extends Enumeration {
+    type BoutResult = Value
+
+    val V, D = Value
+  }
+
   object FredQuery extends Enumeration {
     val tournament = QueryType("tournament", "tournaments")
     val event = QueryType("event", "events")

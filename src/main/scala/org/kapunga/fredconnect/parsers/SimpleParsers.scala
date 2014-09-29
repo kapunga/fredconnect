@@ -3,17 +3,19 @@ package org.kapunga.fredconnect.parsers
 import java.util.Date
 
 import org.kapunga.fredconnect.AgeLimit.AgeLimit
+import org.kapunga.fredconnect.BoutResult.BoutResult
 import org.kapunga.fredconnect.EventGender.EventGender
 import org.kapunga.fredconnect.EventRating.EventRating
 import org.kapunga.fredconnect.Gender
 import org.kapunga.fredconnect.Gender._
 import org.kapunga.fredconnect.RatingLetter
 import org.kapunga.fredconnect.RatingLimit.RatingLimit
+import org.kapunga.fredconnect.RoundType.RoundType
 import org.kapunga.fredconnect.Weapon.Weapon
 import org.kapunga.fredconnect._
 import org.kapunga.fredconnect.RatingLetter._
 import org.kapunga.fredconnect.Weapon._
-import play.api.libs.json.JsValue
+import play.api.libs.json.{JsArray, JsValue}
 
 /**
  * Created by kapunga on 9/27/14.
@@ -103,6 +105,20 @@ object SimpleParsers {
     }
   }
 
+  def parseRoundType(jsValue: JsValue): RoundType = {
+    parseString(jsValue, "pools").toLowerCase match {
+      case "de" => RoundType.DE_TABLES
+      case _ => RoundType.POOLS
+    }
+  }
+
+  def parseBoutResult(jsValue: JsValue): BoutResult = {
+    parseString(jsValue).toLowerCase match {
+      case "v" => BoutResult.V
+      case _ => BoutResult.D
+    }
+  }
+
   def parseString(jsValue: JsValue, defValue: String = ""): String = {
     jsValue.asOpt[String] match {
       case Some(item) => item
@@ -135,6 +151,13 @@ object SimpleParsers {
     jsValue.asOpt[Date] match {
       case Some(item) => item
       case None => defValue
+    }
+  }
+
+  def parseArray(jsValue: JsValue): List[JsValue] = {
+    jsValue match {
+      case JsArray(seq) => seq.toList
+      case _ => List[JsValue]()
     }
   }
 }

@@ -3,9 +3,11 @@ package org.kapunga.fredconnect
 import java.util.Date
 
 import org.kapunga.fredconnect.AgeLimit.AgeLimit
+import org.kapunga.fredconnect.BoutResult.BoutResult
 import org.kapunga.fredconnect.EventGender.EventGender
 import org.kapunga.fredconnect.EventRating.EventRating
 import org.kapunga.fredconnect.RatingLimit.RatingLimit
+import org.kapunga.fredconnect.RoundType.RoundType
 import org.kapunga.fredconnect.Weapon.Weapon
 import org.kapunga.fredconnect.RatingLetter.RatingLetter
 import org.kapunga.fredconnect.Gender.Gender
@@ -74,6 +76,17 @@ case class Venue(name: String, address: String, city: String, state: String, zip
 
 case class Competitor(id: Int, competitorId: Int, rating: Rating, club: Club, authorityId: AuthorityId,
                       firstName: String, lastName: String, gender: Gender, birthYear: Int) extends FredData
+
+case class Bout(id: Int, boutFencerOne: BoutFencer, boutFencerTwo: BoutFencer) extends FredData {
+  def hasFencers(): Boolean = boutFencerOne != null && boutFencerTwo != null
+  def printBout(): String = {
+    s"${boutFencerOne.firstName} ${boutFencerOne.lastName} (${boutFencerOne.result} ${boutFencerOne.score}-" +
+    s"${boutFencerTwo.score} ${boutFencerTwo.result}) ${boutFencerTwo.firstName} ${boutFencerTwo.lastName}"
+  }
+}
+
+case class BoutFencer(id: Int, usfaId: String, firstName: String, lastName: String, gender: Gender, birthyear: Int,
+                      score: Int, result: BoutResult, seed: Int, primaryClubId: Int)
 
 /**
  *
@@ -153,4 +166,9 @@ case class Result(id: Int, eventId: Int, tournamentId: Int, competitorId: Int, f
 }
  */
 
-case class RoundResult(id: Int) extends FredData
+case class RoundResult(id: Int, tournamentId: Int, eventId: Int, roundType: RoundType, roundDesc: String,
+                       roundSeq: Int, bouts: List[Bout]) extends FredData
+
+/*
+  "pools" :
+ */
