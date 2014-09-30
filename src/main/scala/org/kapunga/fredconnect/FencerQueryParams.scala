@@ -11,13 +11,10 @@ import org.kapunga.fredconnect.QueryEval.QueryEval
  *
  * There are currently two parameters askFred takes for fencers which we do not support:
  *
- * user_id - integer
- * user_ids - comma separated list of integers
+ * user_id - integer<br>
+ * user_ids - comma separated list of integers<br>
  *
  * This appears to be an internal fred userId which is at the moment irrelevant.
- *
- * @see [[org.kapunga.fredconnect.queryParamsToMap()]]
- * @see [[org.kapunga.fredconnect.AskFredClient.getFencers()]]
  *
  * @author Paul J Thordarson
  */

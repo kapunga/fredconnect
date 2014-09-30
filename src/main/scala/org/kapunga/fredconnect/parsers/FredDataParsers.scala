@@ -37,12 +37,43 @@ object FredDataParsers {
 
     val division = parseDivision(jsValue \ "division")
 
+    val startDate = parseDate(jsValue \ "start_date")
+
+    val endDate = parseDate(jsValue \ "end_date", startDate)
+
+    val comments = parseString(jsValue \ "comments")
+
+    val preregOpen = parseDate(jsValue \ "prereg_open")
+
+    val preregClose = parseDate(jsValue \ "prereg_close")
+
+    val authority = parseString(jsValue \ "authority")
+
+    val feeRequired = parseBoolean(jsValue \ "is_fee_required")
+
+    val roc = parseBoolean(jsValue \ "is_roc")
+
+    val bayCup = parseBoolean(jsValue \ "is_baycup")
+
+    val visible = parseBoolean(jsValue \ "is_visible")
+
+    val cancelled = parseBoolean(jsValue \ "is_cancelled")
+
+    val acceptFeesOnline = parseBoolean(jsValue \ "is_accepting_fees_online")
+
+    val fee = parseDouble(jsValue \ "fee")
+
+    val currency = parseString(jsValue \ "fee_currency")
+
+    val moreInfo = parseString(jsValue \ "more_info")
+
     val events = (jsValue \ "events") match {
       case JsArray(seq) => seq.map(jsValue => parseEvent(jsValue)).toList
       case _ => List[Event]()
     }
 
-    new Tournament(id, name, venue, division, events)
+    new Tournament(id, name, venue, division, startDate, endDate, comments, preregOpen, preregClose, authority,
+                   feeRequired, roc, bayCup, visible, cancelled, acceptFeesOnline, fee, currency, moreInfo, events)
   }
 
   def parseEvent(jsValue: JsValue): Event = {
@@ -100,9 +131,33 @@ object FredDataParsers {
 
     val tournamentEnd = parseDate(jsValue \ "tournament_end_date")
 
-    val weapon = parseWeapon(jsValue \ "")
+    val weapon = parseWeapon(jsValue \ "weapon")
 
-    val gender = parseEventGender(jsValue \ "")
+    val gender = parseEventGender(jsValue \ "gender")
+
+    val ageLimit = parseAgeLimit(jsValue \ "age_limit")
+
+    val ratingLimit = parseRatingLimit(jsValue \ "rating_limit")
+
+    val eventRating = parseEventRating(jsValue \ "event_rating")
+
+    val entries = parseInt(jsValue \ "entries")
+
+    val isTeam = parseBoolean(jsValue \ "is_team")
+
+    val eventDesc = parseString(jsValue \ "event_desc")
+
+    val eventDate = parseDate(jsValue \ "event_date")
+
+    val eventTime = parseString(jsValue \ "event_time")
+
+    val authority = parseString(jsValue \ "authority")
+
+    val place = parseInt(jsValue \ "place")
+
+    val tournamentDivId = parseInt(jsValue \ "tournament_division_id")
+
+    val competitorDivId = parseInt(jsValue \ "competitor_division_id")
 
     val club = parseResultClub(jsValue)
 
@@ -123,7 +178,9 @@ object FredDataParsers {
     val withdrawn = parseBoolean(jsValue \ "is_withdraw")
 
     new Result(id, eventId, tournamentId, competitorId, firstName, lastName, tournamentName, tournamentStart,
-               tournamentEnd, venue, weapon, gender, club, beforeRating, earnedRating, excluded, withdrawn)
+               tournamentEnd, venue, weapon, gender, ageLimit, ratingLimit, eventRating, entries, isTeam, eventDesc,
+               eventDate, eventTime, authority, place, tournamentDivId, competitorDivId, club, beforeRating,
+               earnedRating, excluded, withdrawn)
   }
 
   def parseRoundResult(jsValue: JsValue): RoundResult = {
