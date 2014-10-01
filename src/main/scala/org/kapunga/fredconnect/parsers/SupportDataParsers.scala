@@ -92,8 +92,10 @@ object SupportDataParsers {
     new Division(id, name, abbrev)
   }
 
-  def parseClubs(clubs: JsValue, primary: JsValue): List[Club] = {
-    val primaryId = parseInt(primary, -1)
+  def parseClubs(jsValue: JsValue): List[Club] = {
+    val clubs = jsValue \ "clubs"
+
+    val primaryId = parseInt(jsValue \ "primary_club_id", -1)
 
     clubs match {
       case JsArray(clubSeq) =>
@@ -116,17 +118,17 @@ object SupportDataParsers {
   }
 
   def parseClub(jsValue: JsValue): Club = {
-    val id = parseInt(jsValue \ "club_id_1")
-    val name = parseString(jsValue \ "club_1_name")
-    val initials = parseString(jsValue \ "club_1_initials")
+    val id = parseInt(jsValue \ "id")
+    val name = parseString(jsValue \ "name")
+    val initials = parseString(jsValue \ "initials")
 
     new Club(id, name, initials)
   }
 
   def parseResultClub(jsValue: JsValue): Club = {
-    val id = parseInt(jsValue \ "id")
-    val name = parseString(jsValue \ "name")
-    val initials = parseString(jsValue \ "initials")
+    val id = parseInt(jsValue \ "club_id_1")
+    val name = parseString(jsValue \ "club_1_name")
+    val initials = parseString(jsValue \ "club_1_initials")
 
     new Club(id, name, initials)
   }

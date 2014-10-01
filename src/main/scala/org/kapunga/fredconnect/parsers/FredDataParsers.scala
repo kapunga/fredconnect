@@ -15,7 +15,7 @@ object FredDataParsers {
 
     val division = parseDivision(jsValue \ "division")
 
-    val clubs = parseClubs(jsValue \ "clubs", jsValue \ "primary_club_id")
+    val clubs = parseClubs(jsValue)
 
     val ratings = parseRatings(jsValue \ "usfa_ratings")
 
