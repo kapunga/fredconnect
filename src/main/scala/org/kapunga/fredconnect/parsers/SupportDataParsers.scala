@@ -71,15 +71,9 @@ object SupportDataParsers {
 
     val authorityId = parseAuthorityId(competitor)
 
-    val firstName = parseString(competitor \ "first_name")
+    val person = parsePerson(jsValue)
 
-    val lastName = parseString(competitor \ "last_name")
-
-    val gender = parseGender(competitor \ "gender")
-
-    val birthYear = parseInt(competitor \ "birthyear")
-
-    new Competitor(id, competitorId, rating, club, authorityId, firstName, lastName, gender, birthYear)
+    new Competitor(id, competitorId, rating, club, authorityId, person)
   }
 
   def parseAuthorityId(jsValue: JsValue): AuthorityId = {
@@ -202,13 +196,7 @@ object SupportDataParsers {
 
     val usfaId = parseString(jsValue \ "usfa_id")
 
-    val firstName = parseString(jsValue \ "first_name")
-
-    val lastName = parseString(jsValue \ "last_name")
-
-    val gender = parseGender(jsValue \ "gender")
-
-    val birthYear = parseInt(jsValue \ "birthyear")
+    val person = parsePerson(jsValue)
 
     val score = parseInt(jsValue \ "score")
 
@@ -218,7 +206,7 @@ object SupportDataParsers {
 
     val primaryClubId = parseInt(jsValue \ "primary_club_id")
 
-    new BoutFencer(id, usfaId, firstName, lastName, gender, birthYear, score, status, seed, primaryClubId)
+    new BoutFencer(id, usfaId, person, score, status, seed, primaryClubId)
   }
 
   def getPoolBouts(jsValue: JsValue): List[Bout] = {

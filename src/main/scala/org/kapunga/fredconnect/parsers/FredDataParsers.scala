@@ -79,17 +79,11 @@ object FredDataParsers {
 
     val weapon = parseWeapon(jsValue \ "weapon")
 
-    val gender = parseEventGender(jsValue \ "gender")
-
-    val ageLimit = parseAgeLimit(jsValue \ "age_limit")
-
-    val ratingLimit = parseRatingLimit(jsValue \ "rating_limit")
+    val eventLimits = parseEventLimits(jsValue)
 
     val entries = parseInt(jsValue \ "entries")
 
     val preRegs = parseInt(jsValue \ "prereg_count")
-
-    val isTeamEvent = parseBoolean(jsValue \ "is_team")
 
     val rating = parseEventRating(jsValue \ "rating")
 
@@ -100,8 +94,7 @@ object FredDataParsers {
       case _ => List[Competitor]()
     }
 
-    new Event(id, tournamentId, name, weapon, gender, ageLimit, ratingLimit, entries, preRegs, isTeamEvent, rating,
-              ratingPrediction, preregs)
+    new Event(id, tournamentId, name, weapon, eventLimits, entries, preRegs, rating, ratingPrediction, preregs)
   }
 
   def parseResult(jsValue: JsValue): Result = {
