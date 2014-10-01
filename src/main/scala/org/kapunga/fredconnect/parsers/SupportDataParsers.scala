@@ -10,6 +10,50 @@ import play.api.libs.json.{JsArray, JsValue}
  * Created by kapunga on 9/28/14.
  */
 object SupportDataParsers {
+  def parsePerson(jsValue: JsValue): Person = {
+    val firstName = parseString(jsValue \ "first_name")
+
+    val lastName = parseString(jsValue \ "last_name")
+
+    val gender = parseGender(jsValue \ "gender")
+
+    val birthYear = parseInt(jsValue \ "birthyear", 2000)
+
+    new Person(firstName, lastName, gender, birthYear)
+  }
+
+  def parseEventLimits(jsValue: JsValue): EventLimits = {
+    val gender = parseEventGender(jsValue \ "gender")
+
+    val ageLimit = parseAgeLimit(jsValue \ "age_limit")
+
+    val ratingLimit = parseRatingLimit(jsValue \ "rating_limit")
+
+    val isTeam = parseBoolean(jsValue \ "is_team")
+
+    new EventLimits(gender, ageLimit, ratingLimit, isTeam)
+  }
+
+  def parseEventFinish(jsValue: JsValue): EventFinish = {
+    val weapon = parseWeapon(jsValue \ "weapon")
+
+    val entries = parseInt(jsValue \ "entries")
+
+    val place = parseInt(jsValue \ "place")
+
+    val ratingEarnedLetter = parseRatingLetter(jsValue \ "rating_Earned_letter")
+
+    val ratingEarnedYear = parseInt(jsValue \ "rating_Earned_year", 1970)
+
+    val earnedRating = new Rating(-1, weapon, ratingEarnedLetter, ratingEarnedYear.toString)
+
+    val excluded = parseBoolean(jsValue \ "is_excluded")
+
+    val withdrawn = parseBoolean(jsValue \ "is_withdraw")
+
+    new EventFinish(entries, place, earnedRating, excluded, withdrawn)
+  }
+
   def parseCompetitor(jsValue: JsValue, weapon: Weapon): Competitor = {
     val id = parseInt(jsValue \ "id")
     val competitorId = parseInt(jsValue \ "competitor_id")

@@ -16,10 +16,12 @@ sealed abstract class FredData {
   val id: Int
 }
 
-case class Fencer(id: Int, authIds: AuthorityId, firstName: String, lastName: String, gender: Gender, birthYear: Int,
+case class Fencer(id: Int, authIds: AuthorityId, person: Person,
                   division: Division, clubs: List[Club], ratings: Map[Weapon, Rating]) extends FredData
 
 case class AuthorityId(usfa: String, cff: String, fie: String)
+
+case class Person(firstName: String, lastName: String, gender: Gender, birthYear: Int)
 
 case class Division(id: Int, name: String, abbrev: String) extends FredData
 
@@ -48,6 +50,10 @@ case class Bout(id: Int, boutFencerOne: BoutFencer, boutFencerTwo: BoutFencer) e
   }
 }
 
+case class EventLimits(gender: EventGender, ageLimit: AgeLimit, ratingLimit: RatingLimit, isTeam: Boolean)
+
+case class EventFinish(entries: Int, place: Int, ratingEarned: Rating, excluded: Boolean, withdrawn: Boolean)
+
 case class BoutFencer(id: Int, usfaId: String, firstName: String, lastName: String, gender: Gender, birthyear: Int,
                       score: Int, result: BoutResult, seed: Int, primaryClubId: Int)
 
@@ -70,10 +76,9 @@ case class Event(id: Int, tournamentId: Int, name: String, weapon: Weapon, gende
 
 case class Result(id: Int, eventId: Int, tournamentId: Int, competitorId: Int, firstName: String, lastName: String,
                   tournamentName: String, tournamentStart: Date, tournamentEnd: Date, venue: Venue, weapon: Weapon,
-                  gender: EventGender, ageLimit: AgeLimit, ratingLimit: RatingLimit, eventRating: EventRating,
-                  entries: Int, isTeam: Boolean, eventDesc: String, eventDate: Date, eventTime: String, authority: String,
-                  place: Int, tourmamentDivId: Int, competitorDivId: Int, club: Club, ratingBefore: Rating,
-                  earnedRating: Rating, excluded: Boolean, withdrawn: Boolean) extends FredData
+                  eventLimits: EventLimits, eventRating: EventRating,
+                  eventDesc: String, eventDate: Date, eventTime: String, authority: String,
+                  tourmamentDivId: Int, competitorDivId: Int, club: Club, ratingBefore: Rating, eventFinish: EventFinish) extends FredData
 
 case class RoundResult(id: Int, tournamentId: Int, eventId: Int, roundType: RoundType, roundDesc: String,
                        roundSeq: Int, bouts: List[Bout]) extends FredData

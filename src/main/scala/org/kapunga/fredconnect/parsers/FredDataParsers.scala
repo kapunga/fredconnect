@@ -9,13 +9,7 @@ object FredDataParsers {
   def parseFencer(jsValue: JsValue): Fencer = {
     val id = parseInt(jsValue \ "id")
 
-    val firstName = parseString(jsValue \ "first_name")
-
-    val lastName = parseString(jsValue \ "last_name")
-
-    val gender = parseGender(jsValue \ "gender")
-
-    val birthYear = parseInt(jsValue \ "birthyear", 1970)
+    val person = parsePerson(jsValue)
 
     val authIds = parseAuthorityId(jsValue)
 
@@ -25,7 +19,7 @@ object FredDataParsers {
 
     val ratings = parseRatings(jsValue \ "usfa_ratings")
 
-    new Fencer(id, authIds, firstName, lastName, gender, birthYear, division, clubs, ratings)
+    new Fencer(id, authIds, person, division, clubs, ratings)
   }
 
   def parseTournament(jsValue: JsValue): Tournament = {
@@ -133,17 +127,9 @@ object FredDataParsers {
 
     val weapon = parseWeapon(jsValue \ "weapon")
 
-    val gender = parseEventGender(jsValue \ "gender")
-
-    val ageLimit = parseAgeLimit(jsValue \ "age_limit")
-
-    val ratingLimit = parseRatingLimit(jsValue \ "rating_limit")
+    val eventLimits = parseEventLimits(jsValue)
 
     val eventRating = parseEventRating(jsValue \ "event_rating")
-
-    val entries = parseInt(jsValue \ "entries")
-
-    val isTeam = parseBoolean(jsValue \ "is_team")
 
     val eventDesc = parseString(jsValue \ "event_desc")
 
@@ -152,8 +138,6 @@ object FredDataParsers {
     val eventTime = parseString(jsValue \ "event_time")
 
     val authority = parseString(jsValue \ "authority")
-
-    val place = parseInt(jsValue \ "place")
 
     val tournamentDivId = parseInt(jsValue \ "tournament_division_id")
 
@@ -165,22 +149,13 @@ object FredDataParsers {
 
     val ratingBeforeYear = parseInt(jsValue \ "rating_before_year", 1970)
 
-    val ratingEarnedLetter = parseRatingLetter(jsValue \ "rating_Earned_letter")
-
-    val ratingEarnedYear = parseInt(jsValue \ "rating_Earned_year", 1970)
-
     val beforeRating = new Rating(-1, weapon, ratingBeforeLetter, ratingBeforeYear.toString)
 
-    val earnedRating = new Rating(-1, weapon, ratingEarnedLetter, ratingEarnedYear.toString)
-
-    val excluded = parseBoolean(jsValue \ "is_excluded")
-
-    val withdrawn = parseBoolean(jsValue \ "is_withdraw")
+    val eventFinish = parseEventFinish(jsValue)
 
     new Result(id, eventId, tournamentId, competitorId, firstName, lastName, tournamentName, tournamentStart,
-               tournamentEnd, venue, weapon, gender, ageLimit, ratingLimit, eventRating, entries, isTeam, eventDesc,
-               eventDate, eventTime, authority, place, tournamentDivId, competitorDivId, club, beforeRating,
-               earnedRating, excluded, withdrawn)
+               tournamentEnd, venue, weapon, eventLimits, eventRating, eventDesc, eventDate, eventTime,
+               authority, tournamentDivId, competitorDivId, club, beforeRating, eventFinish)
   }
 
   def parseRoundResult(jsValue: JsValue): RoundResult = {
