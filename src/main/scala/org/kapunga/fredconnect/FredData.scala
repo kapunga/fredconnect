@@ -12,24 +12,114 @@ import org.kapunga.fredconnect.Weapon.Weapon
 import org.kapunga.fredconnect.RatingLetter.RatingLetter
 import org.kapunga.fredconnect.Gender.Gender
 
-sealed abstract class FredData {
+/**
+ * This superclass is the parent to any askFred data type that gets sent with an id, so presumably it can be looked up.
+ * This can be anything from the objects we query for like [[Fencer]] and [[Tournament]], to things we can't look up
+ * directly, but can be used to query other objects, like [[Division]] and [[Club]], even a couple classes that we get
+ * ids for but don't actually have any visible way to access or filter by them in the askFred interface, like [[Bout]].
+ *
+ * @author Paul J Thordarson
+ * @since 0.1
+ *
+ */
+abstract class FredData {
   val id: Int
 }
 
+/**
+ * This case class represents a fencer in the askFred database.  AskFred offers no guarantee that fencers won't go away,
+ * this happens mainly when there are duplicate fencers for the same person and the records are merged.
+ *
+ * @author Paul J Thordarson
+ * @since 0.1
+ *
+ * @param id The askFred id for this Fencer class.
+ * @param authIds A collection of authoritiy ids, see [[AuthorityId]].
+ * @param person Personal information like name and birth year, see [[Person]]
+ * @param division Division information for this fencer, see [[Division]]
+ * @param clubs A list of clubs this fencer is a member of.  The first club listed is their primary club, see [[Club]]
+ * @param ratings A map of [[Weapon]] to [[Rating]] representing this fencers ratings in each of the three weapons.
+ */
 case class Fencer(id: Int, authIds: AuthorityId, person: Person, division: Division,
                   clubs: List[Club], ratings: Map[Weapon, Rating]) extends FredData
 
+/**
+ * A collection of id numbers for different fencing authorities.  This represents a fencers specific identification
+ * number with organizations like the United States Fencing Association.  AskFred has three of these.
+ *
+ * @author Paul J Thordarson
+ * @since 0.1
+ *
+ * @param usfa Identification number for the USFA (United States Fencing Association)
+ * @param cff Identification number for the CFF (Canadian Fencing Federation)
+ * @param fie Identification number for the FIE (Fédération Internationale d'Escrime)
+ */
 case class AuthorityId(usfa: String, cff: String, fie: String)
 
+/**
+ * A collection of personal data about a fencer including their name, gender, and birth year.
+ *
+ * @author Paul J Thordarson
+ * @since 0.1
+ *
+ * @param firstName The fencer's first name.
+ * @param lastName The fencer's last name.
+ * @param gender The fencer's gender.
+ * @param birthYear The fencer's birth year.
+ */
 case class Person(firstName: String, lastName: String, gender: Gender, birthYear: Int) {
+  /**
+   * Pretty prints a person's name for human reading.
+   *
+   * @since 0.1
+   *
+   * @return Human readable name string.
+   */
   def printName: String = s"${firstName} ${lastName}"
 }
 
+/**
+ * Represents a division in the USFA.  Division id is used as a parameter in a number of searches, for example
+ * [[Tournament]].
+ *
+ * @author Paul J Thordarson
+ * @since 0.1
+ *
+ * @param id The askFred Id for this Division.
+ * @param name The full name of this Division.
+ * @param abbrev The abbreviation of this division.
+ */
 case class Division(id: Int, name: String, abbrev: String) extends FredData
 
+/**
+ * Represents a club in the USFA.  Club id is used as a parameter in a number of searches, for example [[Fencer]].
+ *
+ * @author Paul J Thordarson
+ * @since 0.1
+ *
+ * @param id The askFred Id for this fencing club.
+ * @param name The full name of this club.
+ * @param initials The initals for this club.
+ */
 case class Club(id: Int, name: String, initials: String) extends FredData
 
-case class Rating(id: Int, weapon: Weapon, letter: RatingLetter, year: String, authority: String = "USFA") extends FredData {
+/**
+ * A USFA rating issued to a fencer after placing high enough in a tournament.
+ *
+ * @author Paul J Thordarson
+ * @since 0.1
+ *
+ * @param id The askFred Id for this rating.  Currently there is no use for this id in the askFred REST API
+ * @param weapon The weapon this rating is issued for.
+ * @param letter The letter of this rating.
+ * @param year The year this rating was earned.
+ * @param authority The authority issuing this rating.
+ */
+case class Rating(id: Int, weapon: Weapon, letter: RatingLetter,
+                  year: String, authority: String = "USFA") extends FredData {
+  /**
+   * @return The short string of this rating, such as "C14".
+   */
   def shortValue: String = {
     letter match {
       case RatingLetter.U => "U"
