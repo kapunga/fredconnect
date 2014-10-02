@@ -1,7 +1,10 @@
 package org.kapunga.fredconnect
 
+import java.util.concurrent.TimeoutException
+
 import com.stackmob.newman.ApacheHttpClient
 import com.stackmob.newman.dsl._
+import com.stackmob.newman.response.HttpResponse
 import com.stackmob.newman.response.HttpResponseCode.Ok
 import scala.concurrent.duration._
 import play.api.libs.json._
@@ -65,12 +68,24 @@ class FredApiClient(apiKey: String) {
   private def executeRequest(urlString: String): Option[JsValue] = {
     val url = new URL(urlString)
 
-    val response = Await.result(GET(url).addHeaders(FredApiClient.apiHeader -> apiKey).apply,
-                                FredApiClient.timeout.second)
+    val response = fetchResult(url, FredApiClient.retries) match {
+      case Some(result) => result
+      case None => throw new FredRequestFailedException(FredFailureReason.RequestTimedOut)
+    }
 
     response.code match {
       case Ok => Some(Json.parse(response.bodyString))
       case _ => None
+    }
+  }
+
+  private def fetchResult(url: URL, retries: Int): Option[HttpResponse] = {
+    if (retries <= 0) None
+
+    try {
+      Some(Await.result(GET(url).addHeaders(FredApiClient.apiHeader -> apiKey).apply, FredApiClient.timeout.second))
+    } catch {
+      case e: TimeoutException => fetchResult(url, retries - 1)
     }
   }
 }
@@ -80,6 +95,7 @@ object FredApiClient {
   val baseApiUrl = "api.askfred.net/v1/"
 
   val timeout = 5
+  val retries = 3
 
   def getBaseUrlString(query: FredQuery.QueryType): String = {
     s"https://${baseApiUrl}${query.query}"

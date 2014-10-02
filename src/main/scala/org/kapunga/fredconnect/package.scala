@@ -28,6 +28,12 @@ package object fredconnect {
 
   implicit def queryParamsToMap(queryParams: QueryParams): Map[String, String] = queryParams.getQueryMap()
 
+  object FredFailureReason extends Enumeration {
+    type FredFailureReason = Value
+
+    val RequestTimedOut = Value
+  }
+
   /**
    * An enumeration representing the three weapons in fencing.
    *
