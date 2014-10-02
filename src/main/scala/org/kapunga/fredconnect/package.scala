@@ -28,12 +28,24 @@ package object fredconnect {
 
   implicit def queryParamsToMap(queryParams: QueryParams): Map[String, String] = queryParams.getQueryMap()
 
+  /**
+   * An enumeration representing the three weapons in fencing.
+   *
+   * @author Paul J Thordarson
+   * @since 0.1
+   */
   object Weapon extends Enumeration {
     type Weapon = Value
 
     val Foil, Epee, Saber = Value
   }
 
+  /**
+   * An enum eration representing the letter ratings used by the USFA.
+   *
+   * @author Paul J Thordarson
+   * @since 0.1
+   */
   object RatingLetter extends Enumeration {
     type RatingLetter = Value
 

@@ -128,42 +128,71 @@ case class Rating(id: Int, weapon: Weapon, letter: RatingLetter,
   }
 }
 
-case class Venue(name: String, address: String, city: String, state: String, zipCode: String, country: String,
-                 timezone: String, latitude: Double, longitude: Double, precision: String)
-
-case class Competitor(id: Int, competitorId: Int, rating: Rating, club: Club, authorityId: AuthorityId,
-                      person: Person) extends FredData
-
-case class Bout(id: Int, boutFencerOne: BoutFencer, boutFencerTwo: BoutFencer) extends FredData {
-  def hasFencers(): Boolean = boutFencerOne != null && boutFencerTwo != null
-  def printBout(): String = {
-    s"${boutFencerOne.person.printName} (${boutFencerOne.result} ${boutFencerOne.score}-" +
-    s"${boutFencerTwo.score} ${boutFencerTwo.result}) ${boutFencerTwo.person.printName}"
-  }
-}
-
-case class EventLimits(gender: EventGender, ageLimit: AgeLimit, ratingLimit: RatingLimit, isTeam: Boolean)
-
-case class EventFinish(entries: Int, place: Int, ratingEarned: Rating, excluded: Boolean, withdrawn: Boolean)
-
-case class BoutFencer(id: Int, usfaId: String, person: Person, score: Int, result: BoutResult,
-                      seed: Int, primaryClubId: Int)
-
+/**
+ *
+ * @author Paul J Thordarson
+ * @since 0.1
+ *
+ * @param id
+ * @param name
+ * @param venue
+ * @param division
+ * @param startDate
+ * @param endDate
+ * @param comments
+ * @param preregOpen
+ * @param preregClose
+ * @param authority
+ * @param feeRequired
+ * @param roc
+ * @param bayCup
+ * @param visible
+ * @param cancelled
+ * @param isAcceptingFeeOnline
+ * @param fee
+ * @param currency
+ * @param moreInfo
+ * @param events
+ */
 case class Tournament(id: Int, name: String, venue: Venue, division: Division, startDate: Date, endDate: Date,
                       comments: String, preregOpen: Date, preregClose: Date, authority: String, feeRequired: Boolean,
                       roc: Boolean, bayCup: Boolean, visible: Boolean, cancelled: Boolean, isAcceptingFeeOnline: Boolean,
                       fee: Double, currency: String, moreInfo: String, events: List[Event]) extends FredData
 
+case class Venue(name: String, address: String, city: String, state: String, zipCode: String, country: String,
+                 timezone: String, latitude: Double, longitude: Double, precision: String)
+
+/**
+ *
+ * The following fields are returned by askFred but are currently unimplemented:
+ * <ul>
+ *   <li>"authority" : { }</li>
+ *   <li>"description" : ""</li>
+ *   <li>"close_of_reg" : "2014-09-26T18:45:00-04:00"</li>
+ *   <li>"fee" : "20.00"</li>
+ * </ul>
+ *
+ * @author Paul J Thordarson
+ * @since 0.1
+ *
+ * @param id The askFred id for this event.
+ * @param tournamentId The askFred id for the [[Tournament]] this event is a member of.
+ * @param name The name of the tournament as specified by the organizers.
+ * @param weapon
+ * @param eventLimits
+ * @param entries
+ * @param preRegs
+ * @param rating
+ * @param ratingPrediction
+ * @param preregs
+ */
 case class Event(id: Int, tournamentId: Int, name: String, weapon: Weapon, eventLimits: EventLimits, entries: Int,
                  preRegs: Int, rating: EventRating, ratingPrediction: EventRating, preregs: List[Competitor]) extends FredData
-/*
-{
-  "authority" : { },
-  "description" : "",
-  "close_of_reg" : "2014-09-26T18:45:00-04:00",
-  "fee" : "20.00"
-}
-*/
+
+case class EventLimits(gender: EventGender, ageLimit: AgeLimit, ratingLimit: RatingLimit, isTeam: Boolean)
+
+case class Competitor(id: Int, competitorId: Int, rating: Rating, club: Club, authorityId: AuthorityId,
+                      person: Person) extends FredData
 
 case class Result(id: Int, eventId: Int, tournamentId: Int, competitorId: Int, firstName: String, lastName: String,
                   tournamentName: String, tournamentStart: Date, tournamentEnd: Date, venue: Venue, weapon: Weapon,
@@ -171,5 +200,26 @@ case class Result(id: Int, eventId: Int, tournamentId: Int, competitorId: Int, f
                   eventTime: String, authority: String, tourmamentDivId: Int, competitorDivId: Int, club: Club,
                   ratingBefore: Rating, eventFinish: EventFinish) extends FredData
 
+case class EventFinish(entries: Int, place: Int, ratingEarned: Rating, excluded: Boolean, withdrawn: Boolean)
+
 case class RoundResult(id: Int, tournamentId: Int, eventId: Int, roundType: RoundType, roundDesc: String,
                        roundSeq: Int, bouts: List[Bout]) extends FredData
+
+case class Bout(id: Int, boutFencerOne: BoutFencer, boutFencerTwo: BoutFencer) extends FredData {
+  def hasFencers(): Boolean = boutFencerOne != null && boutFencerTwo != null
+
+  def hasFencer(id: Int): Boolean = boutFencerOne.id == id || boutFencerTwo.id == id
+
+  def getVictor(): BoutFencer = boutFencerOne.result match {
+    case BoutResult.V => boutFencerOne
+    case BoutResult.D => boutFencerTwo
+  }
+
+  def printBout(): String = {
+    s"${boutFencerOne.person.printName} (${boutFencerOne.result} ${boutFencerOne.score}-" +
+    s"${boutFencerTwo.score} ${boutFencerTwo.result}) ${boutFencerTwo.person.printName}"
+  }
+}
+
+case class BoutFencer(id: Int, usfaId: String, person: Person, score: Int, result: BoutResult,
+                      seed: Int, primaryClubId: Int)
