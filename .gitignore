@@ -3,6 +3,7 @@
 .idea_modules
 
 #SBT
+.history
 project/boot/
 project/plugins/project/
 
