@@ -16,6 +16,12 @@ import scala.concurrent.Await
 class FredApiClient(apiKey: String) {
   implicit val httpClient = new ApacheHttpClient
 
+  /**
+   *
+   * @param query
+   * @param id
+   * @return
+   */
   def idQuery(query: FredQuery.QueryType, id: Int): Option[JsValue] = {
     executeRequest(FredApiClient.getBaseUrlString(query) + s"/${id}") match {
       case Some(item) => Some(item \ query.query)
