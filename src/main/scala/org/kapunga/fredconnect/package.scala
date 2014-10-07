@@ -98,6 +98,17 @@ package object fredconnect {
     type Gender = Value
 
     val Male, Female = Value
+
+    def getGender(gender: String): Gender = {
+      gender.toLowerCase match {
+        case "f" => Female
+        case "w" => Female
+        case "female" => Female
+        case "woman" => Female
+        case "women" => Female
+        case _ => Male
+      }
+    }
   }
 
   object EventGender extends Enumeration {

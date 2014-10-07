@@ -2,7 +2,7 @@ name := "fredconnect"
 
 organization := "org.kapunga"
  
-version := "0.3.0-SNAPSHOT"
+version := "0.3.1-SNAPSHOT"
   
 scalaVersion := "2.10.3"
 
