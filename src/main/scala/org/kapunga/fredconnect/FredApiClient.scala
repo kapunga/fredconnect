@@ -1,29 +1,23 @@
 package org.kapunga.fredconnect
 
-import java.util.concurrent.TimeoutException
-
 import com.stackmob.newman.ApacheHttpClient
 import com.stackmob.newman.dsl._
 import com.stackmob.newman.response.HttpResponse
 import com.stackmob.newman.response.HttpResponseCode.Ok
-import scala.concurrent.duration._
+
 import play.api.libs.json._
 
-import java.net.URL
-
 import scala.concurrent.Await
+import scala.concurrent.duration._
 
-class FredApiClient(apiKey: String) {
+import java.net.URL
+import java.util.concurrent.TimeoutException
+
+protected class FredApiClient(apiKey: String, batchSize: Int = 10) {
   implicit val httpClient = new ApacheHttpClient
 
-  /**
-   *
-   * @param query
-   * @param id
-   * @return
-   */
   def idQuery(query: FredQuery.QueryType, id: Int): Option[JsValue] = {
-    executeRequest(FredApiClient.getBaseUrlString(query) + s"/${id}") match {
+    executeRequest(FredApiClient.getBaseUrlString(query) + s"/$id") match {
       case Some(item) => Some(item \ query.query)
       case None => None
     }
@@ -34,29 +28,28 @@ class FredApiClient(apiKey: String) {
 
     var total = 0
     var page = 0
-    var perPage = 10
 
     var list: Seq[JsValue] = Seq.empty[JsValue]
 
     do {
       page += 1
 
-      executeRequest(queryUrl + s"_page=${page}&_per_page${perPage}") match {
+      executeRequest(queryUrl + s"_page=$page&_per_page$batchSize") match {
         case Some(json) =>
-          total = (json \ "total_matched") match {
-            case JsNumber(num) => num.intValue
+          total = json \ "total_matched" match {
+            case JsNumber(num) => num.intValue()
             case _ => total
           }
 
           list = list ++ {
-            (json \ query.listMap) match {
+            json \ query.listMap match {
               case JsArray(elements) => elements
               case _ => Seq.empty[JsValue]
             }
           }
         case None => Unit
       }
-    } while (total > page * perPage)
+    } while (total > page * batchSize)
 
     list
   }
